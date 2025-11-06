@@ -6,23 +6,21 @@
 </head>
 <body>
 <h2>Formulario de Contacto</h2>
-<form action="https://lm.ciclo.iesnervion.es/form3/envio.php" method="post">
+<form action="https://lm.ciclo.iesnervion.es/form3/envio.php" method="post" enctype="multipart/form-data">
 
     <label for="nombre">Nombre:</label>
-    <input type="text" id="nombre" name="nombre">
-    <br>
-    <label for="email">Correo electrónico:</label>
-    <input type="email" id="email" name="email">
-    <br>
-    <label for="mensaje">Mensaje:</label><br>
-    <textarea id="mensaje" name="mensaje" rows="5" cols="40"></textarea>
-    <br>
-    <label for="imagen">Subir imagen:</label>
-    <input type="file" id="imagen" name="imagen">
-    <br>
-    <button type="submit">Enviar el formulario</button>
+    <input type="text" id="nombre" name="nombre"><br><br>
 
-</form>
+    <label for="email">Correo electrónico:</label>
+    <input type="email" id="correo" name="correo"> <br><br>
+
+    <label for="mensaje">Mensaje:</label><br>
+    <textarea id="mensaje" name="mensaje" rows="5" cols="40"></textarea><br><br>
+
+    <label for="imagen">Subir una imagen:</label><br>
+    <input type="file" id="imagen" name="imagen"><br><br>
+
+    <button type="submit">Enviar el formulario</button>
 
 <a href="../index.html">Volver</a>
 </body>

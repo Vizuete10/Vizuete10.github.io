@@ -17,6 +17,75 @@
         <li> <a href="../web/entradas.html">Entradas</a> </li>
     </ul>
 </nav>
+<main>
+    <h2>Compra tus Entradas</h2>
+    <p>Rellena el formulario para asegurar tu plaza.</p>
+
+    <form action="https://www.w3schools.com/action_page.php" method="get">
+
+        <fieldset>
+            <legend>Datos Personales</legend>
+
+            <div>
+                <label for="nombre_completo">Nombre:</label>
+                <input type="text" id="nombre_completo" name="nombre_usuario" placeholder="Nombre y Apellidos">
+            </div>
+
+            <div>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>Tipo de Entrada</legend>
+
+            <div>
+                <input type="radio" id="abono_general" name="tipo_entrada" value="general" checked>
+                <label for="abono_general">Abono General (3 Días)</label>
+            </div>
+            <div>
+                <input type="radio" id="abono_vip" name="tipo_entrada" value="vip">
+                <label for="abono_vip">Abono VIP (3 Días)</label>
+            </div>
+            <div>
+                <input type="radio" id="entrada_dia" name="tipo_entrada" value="dia">
+                <label for="entrada_dia">Entrada de Día</label>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>Extras</legend>
+
+            <div>
+                <input type="checkbox" id="extra_camping" name="extra_camping" value="si">
+                <label for="extra_camping">Camping</label>
+            </div>
+            <div>
+                <input type="checkbox" id="extra_merch" name="extra_merch" value="si">
+                <label for="extra_merch">Pack Merchandising</label>
+            </div>
+            <div>
+                <input type="checkbox" id="extra_talleres" name="extra_talleres" value="si">
+                <label for="extra_talleres">Acceso a Talleres Tech</label>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>Día (Solo si es Entrada de Día)</legend>
+
+            <label for="dia_evento">Selecciona un día:</label>
+            <select id="dia_evento" name="dia_evento">
+                <option value="viernes">Viernes</option>
+                <option value="sabado">Sábado</option>
+                <option value="domingo">Domingo</option>
+            </select>
+        </fieldset>
+
+        <button type="submit">Enviar Solicitud</button>
+
+    </form>
+</main>
 
 </body>
 </html>

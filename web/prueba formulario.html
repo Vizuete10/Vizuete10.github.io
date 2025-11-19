@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+</style>
+<body>
+<h1>Formulario</h1>
+<form action=""    method="post" enctype="multipart/form-data">
+
+    <fieldset>
+        <legend>Datos personales</legend>
+    <label for="nombre">Nombre:</label>
+    <input type="text" id="nombre" name="nombre"><br><br>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" placeholder="Email"><br><br>
+
+    <label for="mensaje">Mensaje:</label><br>
+    <textarea id="mensaje" name="mensaje" rows="4" cols="50"></textarea><br><br>
+    </fieldset>
+
+    <fieldset>
+        <legend>Elige una opción con type=radio</legend>
+    <input type="radio" id="opcion1" value="opcion1" name="opcion">
+    <label for="opcion1">Opción 1</label><br>
+
+    <input type="radio" id="opcion2" value="opcion2" name="opcion">
+    <label for="opcion2">Opción 2</label><br><br>
+    </fieldset>
+
+    <fieldset>
+        <legend>Elige una opción con type=checkbox</legend>
+    <input type="checkbox" id="opcion3" value="opcion3" name="opcion">
+    <label for="opcion3">Opcion 1</label><br><br>
+    <input type="checkbox" id="opcion4" value="opcion4" name="opcion">
+    <label for="opcion4">Opcion 2</label><br><br>
+    </fieldset>
+
+    <fieldset>
+        <legend>Selecciona una opción del menú desplegable, (Select)</legend>
+    <label for="opciones">Elige una opción:</label>
+    <select id="opciones" name="opciones">
+
+        <option disabled selected>--Selecciona una opción--</option>
+        <option value="opcion1">Opción 1</option>
+        <option value="opcion2">Opción 2</option>
+        <option value="opcion3">Opción 3</option>
+    </select><br><br>
+    </fieldset>
+
+    <fieldset>
+        <legend>Sube un archivo con type=file</legend>
+    <label for="archivo">Selecciona un archivo:</label>
+    <input type="file" id="archivo" name="archivo"><br><br>
+
+    </fieldset>
+
+    <input type="submit" value="Enviar">
+    <input type="reset" value="Limpiar"><br><br>
+</form>
+
+<h1>Tabla</h1>
+<table border="1">
+    <tr>
+        <th>Nombre</th>
+        <th>Email</th>
+        <th>Mensaje</th>
+        <th>Mensaje 2</th>
+    </tr>
+    <tr>
+        <td>John Doe</td>
+        <td rowspan="2">email@email.com</td>
+        <td colspan="2">Este es un mensaje de prueba.</td>
+    </tr>
+    <tr>
+        <td>Pepe</td>
+        <td colspan="2">Otro mensaje de prueba.</td>
+    </tr>
+</table>
+<h1>Enlaces</h1>
+
+<a href="https://www.google.com">Google</a><br><br>
+<a href="https://www.youtube.com">Youtube</a><br><br>
+
+<img src="../img/img4.jpg" height="183" width="275" alt="Imagen de prueba" ><br><br>
+
+
+
+</body>
+</html>

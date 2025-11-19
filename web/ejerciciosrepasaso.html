@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inmobiliaria Jimmy | Diseño de Interiores</title>
+
+    <style>
+        /* --- 1. VARIABLES Y RESET BÁSICO --- */
+        :root {
+            --primary-color: #2c3e50; /* Azul oscuro elegante */
+            --accent-color: #e67e22;  /* Naranja suave para destacar */
+            --bg-color: #f4f4f9;      /* Gris muy claro de fondo */
+            --text-color: #333;
+            --white: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box; /* Para que el padding no rompa el ancho */
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Tipografía moderna */
+            line-height: 1.6;
+            margin: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        /* --- 2. HEADER Y NAVEGACIÓN --- */
+        header {
+            background-color: var(--primary-color);
+            color: var(--white);
+            text-align: center;
+            padding: 2rem 1rem;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            letter-spacing: 2px;
+        }
+
+        header h2 {
+            font-weight: 300;
+            font-size: 1rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 10px auto 0;
+        }
+
+        nav {
+            background-color: #34495e; /* Un tono más claro que el header */
+            display: flex;
+            justify-content: center;
+            position: sticky; /* El menú se queda fijo al bajar */
+            top: 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        nav a {
+            color: var(--white);
+            text-decoration: none;
+            padding: 15px 20px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        nav a:hover {
+            background-color: var(--accent-color);
+        }
+
+        /* --- 3. CONTENIDO PRINCIPAL --- */
+        main {
+            max-width: 1000px; /* Evita que la web se estire demasiado en pantallas grandes */
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        article {
+            background: var(--white);
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        h3 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        /* --- 4. ESTILOS DE LA TABLA (IMPORTANTE PARA EL EXAMEN) --- */
+        table {
+            width: 100%;
+            border-collapse: collapse; /* Quita el espacio entre bordes */
+            margin-top: 15px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            vertical-align: top; /* Alinea el texto arriba, no al centro */
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        tr:hover {
+            background-color: #f1f1f1; /* Efecto al pasar el ratón por la fila */
+        }
+
+        /* Hacemos que las imágenes de la tabla sean responsive */
+        td img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            max-height: 150px; /* Limitamos la altura para que no rompa la tabla */
+            display: block;
+        }
+
+        /* --- 5. FORMULARIO --- */
+        form fieldset {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+        }
+
+        form legend {
+            font-weight: bold;
+            color: var(--accent-color);
+            padding: 0 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: inherit;
+        }
+
+        input[type="submit"],
+        input[type="reset"] {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        input[type="reset"] {
+            background-color: #7f8c8d; /* Color gris para el botón reset */
+        }
+
+        input[type="submit"]:hover {
+            background-color: var(--accent-color);
+        }
+
+        /* --- 6. FOOTER --- */
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 15px;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1 id="inicio">Diseño De Interiores Jimmy</h1>
+    <h2>Especialistas en transformar espacios vacíos en hogares llenos de vida.</h2>
+</header>
+
+<nav>
+    <a href="#inicio">Inicio</a>
+    <a href="#nosotros">Nosotros</a>
+    <a href="#servicios">Servicios</a>
+    <a href="#contacto">Contacto</a>
+</nav>
+
+<main>
+    <article id="nosotros">
+        <h3 >Sobre Nosotros</h3>
+        <p>En <strong>Diseño De Interiores Jimmy</strong>, nos especializamos en transformar espacios en hogares acogedores y funcionales. Con más de 10 años de experiencia en el sector, nuestro equipo de diseñadores profesionales está dedicado a ofrecer soluciones personalizadas que reflejen el estilo y las necesidades de cada cliente.</p>
+        <p>Nuestros servicios incluyen asesoramiento en decoración, selección de mobiliario, planificación del espacio y gestión de proyectos. Trabajamos con una amplia gama de estilos, desde lo clásico hasta lo contemporáneo, asegurándonos de que cada proyecto sea único y satisfactorio.</p>
+        <p>Contáctanos hoy para descubrir cómo podemos ayudarte a crear el espacio de tus sueños.</p>
+    </article>
+
+    <article id="servicios">
+        <h3>Muebles Disponibles</h3>
+        <table>
+            <thead>
+            <tr>
+                <th>Tipo de Mueble</th>
+                <th>Precio</th>
+                <th>Descripción</th>
+                <th>Foto</th>
+                <th>Medidas</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><strong>Estantería KALLAX</strong><br>Blanco</td>
+                <td>59,99€</td>
+                <td>
+                    Su diseño sencillo de líneas limpias la hace flexible.
+                    <br><br>
+                    Puedes ponerla de pie como estantería o tumbarla como aparador.
+                </td>
+                <td><img src="https://www.ikea.com/es/es/images/products/kallax-estanteria-blanco__0644757_pe702939_s5.jpg?f=xl" alt="Estantería Kallax"></td>
+                <td>
+                    <strong>Ancho:</strong> 76.5 cm<br>
+                    <strong>Fondo:</strong> 39 cm<br>
+                    <strong>Altura:</strong> 146.5 cm
+                    <strong>Peso máximo/balda</strong> 13 kg
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Estantería JONAXEL</strong><br>Blanco</td>
+                <td>49,00€</td>
+                <td>
+                    Ideal para baños y zonas húmedas.<br><br>
+                    Acero resistente al óxido y fácil de limpiar.
+                </td>
+                <td><img src="https://www.ikea.com/es/es/images/products/jonaxel-estanteria-blanco__0678052_pe719167_s5.jpg?f=xl" alt="Estantería Jonaxel"></td>
+                <td>
+                    <strong>Ancho:</strong> 80 cm<br>
+                    <strong>Fondo:</strong> 38 cm<br>
+                    <strong>Altura:</strong> 160 cm
+                    <strong>Peso máximo/balda</strong> 25 kg
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Librería HEMNES</strong><br>Blanco/Marrón</td>
+                <td>199,00€</td>
+                <td>
+                    Madera maciza de aspecto natural. Baldas regulables para adaptar el espacio.
+                </td>
+                <td><img src="https://www.ikea.com/es/es/images/products/hemnes-libreria-tinte-blanco-marron-claro__0980092_pe814822_s5.jpg?f=xl" alt="Librería Hemnes"></td>
+                <td>
+                    <strong>Ancho:</strong> 90 cm<br>
+                    <strong>Fondo:</strong> 37 cm<br>
+                    <strong>Altura:</strong> 197 cm
+                    <strong>Peso máximo/balda</strong> 30 kg
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </article>
+
+    <article id="contacto">
+        <form action="https://www.w3schools.com/action_page.php" method="get">
+            <fieldset>
+                <legend>Datos de Contacto</legend>
+
+                <label for="nombre">Nombre completo:</label>
+                <input type="text" id="nombre" name="nombre" placeholder="Ej: Jimmy Doe" required>
+
+                <label for="email">Correo electrónico:</label>
+                <input type="email" id="email" name="email" placeholder="ejemplo@correo.com" required>
+
+                <label for="mensaje">¿En qué podemos ayudarte?</label>
+                <textarea id="mensaje" name="mensaje" rows="4" placeholder="Escribe aquí tu consulta..." required></textarea>
+
+                <div style="text-align: right;">
+                    <input type="reset" value="Borrar">
+                    <input type="submit" value="Enviar Mensaje">
+                </div>
+            </fieldset>
+        </form>
+    </article>
+</main>
+
+<footer>
+    <p>Diseño De Interiores Jimmy &copy; 2024 - Todos los derechos reservados.</p>
+</footer>
+
+</body>
+</html>

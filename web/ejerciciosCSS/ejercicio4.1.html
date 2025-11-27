@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        #parrafos {
+            border-bottom: 1px solid black;
+        }
+
+        .p1 {
+            font-style: italic;
+            text-align: right;
+        }
+
+        .p2 {
+            text-transform: uppercase;
+            text-decoration: line-through;
+        }
+
+        .p3 {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 120%;
+        }
+
+        .p4 {
+            font-weight: bold;
+            text-shadow: 2px 2px 4px green;
+        }
+
+        #bloques {
+            margin-top: 10px;
+            display: flex;
+        }
+
+        .div1, .div2, .div3 {
+            height: 200px;
+            width: 400px;
+            border-radius: 5px;
+        }
+
+        .div1 a, .div2 a {
+            color: white;
+            height: 50px;
+            width: 100px;
+        }
+
+        .div1 {
+            background-color: #bdce8a;
+        }
+
+        .div2 a {
+            display: block;
+        }
+
+        .div1 a {
+            display: inline-block;
+        }
+
+        .div2 {
+            background-color: #84d0be;
+        }
+
+        .div3 {
+            background-color: #c084cc;
+        }
+
+        .ablue {
+            background-color: blue;
+        }
+
+        .ared {
+            background-color: red;
+        }
+
+        .agreen {
+            background-color: green;
+        }
+
+        .linkvacio {
+            text-decoration: none;
+            color: white;
+        }
+
+        .linkvacio:hover {
+            font-weight: bold;
+            color: #e600ff;
+        }
+    </style>
+</head>
+<body>
+<main>
+    <h1>CSS: Ejercicio 1</h1>
+    <div id="parrafos">
+        <p class="p1">Este es el párrafo número 1 en cursiva y alineado a la derecha.</p>
+        <p class="p2">Este es el párrafo número 2 pero convertido en mayúsculas y tachado.</p>
+        <p class="p3">Como no hay dos sin tres, este será el tercero con un tipo de letra diferente y un 20% más
+            grande.</p>
+        <p class="p4">Y por último, un texto en negrita y con sombrita en verde.</p>
+    </div>
+
+    <div id="bloques">
+        <div class="div1">
+            <p>Buscadores:</p>
+            <a href="https://duckduckgo.com/" class="ared">DuckDuckGo</a>
+            <a href="https://ecosia.org/" class="agreen">Ecosia</a>
+            <a href="https://google.com/" class="ablue">Google</a>
+        </div>
+        <div class="div2">
+            <p>Redes Sociales:</p>
+            <a href="https://facebook.com/" class="ared">Facebook</a>
+            <a href="https://twitter.com/" class="agreen">Twitter</a>
+            <a href="https://instagram.com/" class="ablue">Pinterest</a>
+        </div>
+        <div class="div3">
+            <p>Noticias:</p>
+            <a href="https://elpais.com/" class="linkvacio">El País</a>
+            <a href="https://eldiario.es/" class="linkvacio">El Diario</a>
+            <a href="https://elmundo.es/" class="linkvacio">El Mundo</a>
+        </div>
+    </div>
+</main>
+</body>
+</html>

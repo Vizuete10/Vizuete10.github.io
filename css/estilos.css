@@ -1,0 +1,56 @@
+/* 1. Estilos generales del cuerpo */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Fuente moderna */
+    background-color: #f0f2f5; /* Color de fondo suave */
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centra horizontalmente */
+    margin: 0;
+    padding-top: 50px; /* Espacio arriba */
+}
+
+/* 2. Estilo del Título */
+h1 {
+    color: #2c3e50;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 2rem;
+    margin-bottom: 30px;
+}
+
+/* 3. Estilo del contenedor de la lista (La tarjeta blanca) */
+ul {
+    list-style-type: none; /* Quita los puntos negros */
+    padding: 0;
+    margin: 0;
+    background-color: white;
+    width: 100%;
+    max-width: 400px; /* Ancho máximo de la tarjeta */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* Sombra elegante */
+    border-radius: 12px; /* Bordes redondeados */
+    overflow: hidden; /* Para que los hijos respeten el borde redondeado */
+}
+
+/* 4. Estilo de los enlaces (Los botones) */
+li a {
+    display: block; /* Ocupa todo el ancho disponible */
+    text-decoration: none; /* Quita el subrayado azul */
+    color: #555;
+    padding: 15px 25px; /* Relleno para que se vea grande */
+    border-bottom: 1px solid #eee; /* Línea divisoria suave */
+    transition: all 0.3s ease; /* Suaviza la animación */
+    font-weight: 500;
+}
+
+/* Quita el borde del último elemento para que se vea limpio */
+li:last-child a {
+    border-bottom: none;
+}
+
+/* 5. Efecto Hover (Cuando pasas el ratón por encima) */
+li a:hover {
+    background-color: #007bff; /* Fondo azul */
+    color: white; /* Texto blanco */
+    padding-left: 35px; /* Pequeño desplazamiento a la derecha */
+}

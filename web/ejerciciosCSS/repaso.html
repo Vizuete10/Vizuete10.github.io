@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Repaso CSS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        @media screen{
+            div {
+                background-color: red;
+            }
+        }
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #222;
+                color: white;
+            }
+        }
+        @media (max-width: 1000px) {
+            div{
+                width: 50%;
+                align-content: center;
+                text-align: center;
+                align-items: center;
+                padding: 30px;
+            }
+
+        }
+        .element{
+            width: 100px;
+            background-color: #e600ff;
+            height: 100px;
+            transition: 1s;
+        }
+        .element:hover{
+            width: 300px;
+            background-color: yellow;
+            transition: 2s;
+
+        }
+    </style>
+
+</head>
+
+
+<body>
+<div>Hola</div>
+<div class="element">Adios</div>
+
+
+</body>
+</html>

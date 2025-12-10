@@ -6,31 +6,20 @@
     <title>Inmobiliaria Jimmy | Diseño de Interiores</title>
 
     <style>
-        /* --- 1. VARIABLES Y RESET BÁSICO --- */
-        :root {
-            --primary-color: #2c3e50; /* Azul oscuro elegante */
-            --accent-color: #e67e22;  /* Naranja suave para destacar */
-            --bg-color: #f4f4f9;      /* Gris muy claro de fondo */
-            --text-color: #333;
-            --white: #ffffff;
-        }
 
-        * {
-            box-sizing: border-box; /* Para que el padding no rompa el ancho */
-        }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Tipografía moderna */
             line-height: 1.6;
             margin: 0;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            background-color: white;
+            color: black;
         }
 
-        /* --- 2. HEADER Y NAVEGACIÓN --- */
+
         header {
-            background-color: var(--primary-color);
-            color: var(--white);
+            background-color: #00678c;
+            color: white;
             text-align: center;
             padding: 2rem 1rem;
         }
@@ -44,22 +33,21 @@
         header h2 {
             font-weight: 300;
             font-size: 1rem;
-            opacity: 0.9;
             max-width: 800px;
             margin: 10px auto 0;
         }
 
         nav {
-            background-color: #34495e; /* Un tono más claro que el header */
+            background-color: #b3edff;
             display: flex;
             justify-content: center;
-            position: sticky; /* El menú se queda fijo al bajar */
+            position: sticky;
             top: 0;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
         nav a {
-            color: var(--white);
+            color: white;
             text-decoration: none;
             padding: 15px 20px;
             font-weight: bold;
@@ -67,18 +55,18 @@
         }
 
         nav a:hover {
-            background-color: var(--accent-color);
+            background-color: #0031a1;
         }
 
-        /* --- 3. CONTENIDO PRINCIPAL --- */
+
         main {
-            max-width: 1000px; /* Evita que la web se estire demasiado en pantallas grandes */
+            max-width: 1000px;
             margin: 20px auto;
             padding: 0 20px;
         }
 
         article {
-            background: var(--white);
+            background: white;
             padding: 20px;
             margin-bottom: 30px;
             border-radius: 8px;
@@ -86,13 +74,13 @@
         }
 
         h3 {
-            color: var(--primary-color);
-            border-bottom: 2px solid var(--accent-color);
+            color: #00678c ;
+            border-bottom: 2px solid #00678c;
             padding-bottom: 10px;
             margin-top: 0;
         }
 
-        /* --- 4. ESTILOS DE LA TABLA (IMPORTANTE PARA EL EXAMEN) --- */
+
         table {
             width: 100%;
             border-collapse: collapse; /* Quita el espacio entre bordes */
@@ -103,42 +91,41 @@
             padding: 12px;
             text-align: left;
             border-bottom: 1px solid #ddd;
-            vertical-align: top; /* Alinea el texto arriba, no al centro */
+            vertical-align: top;
         }
 
         th {
-            background-color: var(--primary-color);
-            color: var(--white);
+            background-color:#00678c;
+            color: white;
         }
 
         tr:hover {
-            background-color: #f1f1f1; /* Efecto al pasar el ratón por la fila */
+            background-color: #f1f1f1;
         }
 
-        /* Hacemos que las imágenes de la tabla sean responsive */
         td img {
             max-width: 100%;
             height: auto;
             border-radius: 4px;
-            max-height: 150px; /* Limitamos la altura para que no rompa la tabla */
-            display: block;
+            max-height: 300px;
+            display: flex;
         }
 
-        /* --- 5. FORMULARIO --- */
         form fieldset {
             border: 1px solid #ccc;
             border-radius: 5px;
             padding: 20px;
+            display: block;
         }
 
         form legend {
             font-weight: bold;
-            color: var(--accent-color);
+            color: #00678c;
             padding: 0 10px;
         }
 
         label {
-            display: block;
+            display: flex;
             margin-bottom: 5px;
             font-weight: bold;
         }
@@ -147,35 +134,22 @@
         input[type="email"],
         textarea {
             width: 100%;
-            padding: 10px;
+            padding: 15px;
             margin-bottom: 15px;
             border: 1px solid #ccc;
             border-radius: 4px;
             font-family: inherit;
+            display: flex;
+            box-sizing: border-box;
         }
-
-        input[type="submit"],
-        input[type="reset"] {
-            background-color: var(--primary-color);
+        input[type="reset"], [type="submit"] {
+            background-color: #00678c;
+            padding: 3px;
             color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
 
-        input[type="reset"] {
-            background-color: #7f8c8d; /* Color gris para el botón reset */
         }
-
-        input[type="submit"]:hover {
-            background-color: var(--accent-color);
-        }
-
-        /* --- 6. FOOTER --- */
         footer {
-            background-color: var(--primary-color);
+            background-color: lightblue;
             color: white;
             text-align: center;
             padding: 15px;

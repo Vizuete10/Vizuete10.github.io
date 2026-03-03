@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Prueba JAVASCRIPT</title>
+</head>
+<body>
+<h1>Prueba JAVASCRIPT</h1>
+<script>
+    let ciudad = "Amate";
+    const pais = "España";
+    console.log("Vivo en " + ciudad + ", " + pais);
+
+    let nombre = prompt('Introduce tu nombre: ');
+    console.log("Bienvenido al curso de JS, " + nombre);
+    let numero1 = prompt('Introduce un número: ');
+    let numero2 = prompt('Introduce un número: ');
+    let suma = parseInt(numero1) + parseInt(numero2);
+    console.log(`La suma de ${numero1} y ${numero2} es ${suma}`);
+
+    let miEdad = prompt('Introduce tu edad: ');
+    let mayoriaEdad;
+    if ( miEdad >= 19) {
+      mayoriaEdad = true;
+    } else {
+      mayoriaEdad = false;
+    }
+    alert ((mayoriaEdad) ? "Eres mayor de edad" : "No eres mayor de edad")
+
+    let nombreInvitado = prompt("Introduce el nmbre del invitado : ")
+    if (nombreInvitado == "Admin") {
+      alert("Acceso total")
+    } else{
+      alert("Acceso limitado")
+    }
+
+'Solicita un número y muestra todos los impares desde el 1 hasta ese número incluido. ' +
+'Vamos a obligar a introducir sólo números positivos,' +
+' en caso contrario, se mostrará un mensaje y se volverá a solicitar un número.'
+
+    let numero;
+
+
+    do {
+      numero = parseInt(prompt("Por favor, introduce un número entero positivo:"));
+
+      if (numero < 0) {
+        alert("Dato inválido. Debes introducir un número estrictamente mayor que cero.");
+      }
+
+
+    } while (numero < 0);
+
+
+    console.log(`Los números impares desde el 1 hasta el ${numero} son:`);
+
+    for (let i = 1; i <= numero; i++) {
+      if (i % 2 !== 0) {
+        console.log(i);
+      }
+    }
+
+
+</script>
+</body>
+</html>

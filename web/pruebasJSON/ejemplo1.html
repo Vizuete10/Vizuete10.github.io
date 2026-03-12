@@ -1,24 +1,64 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Tabla con jQuery</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </head>
+
 <body>
 
-</body>
+<h2>Datos de Personas</h2>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Nombre</th>
+        <th>Apellidos</th>
+        <th>Edad</th>
+        <th>Ciudad</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr>
+        <td id="nombre"></td>
+        <td id="apellidos"></td>
+        <td id="edad"></td>
+        <td id="ciudad"></td>
+    </tr>
+    </tbody>
+</table>
+
 <script>
-    let obj = {nombre: "Alberto",apellidos:"García",edad: 26,ciudad: "Granada"};
-    json_serializado = serializar(obJson);
-    console.log(json_serializado);
-    obj_recuperado = deserializar(json_serializado);
-    console.log(obj_recuperado);
-    function serializar(obj){
-        return JSON.stringify(obj)
+    $(document).ready(function(){
+
+        // Datos simulando deserialización JSON
+        let obj = {nombre:"Pedro", apellidos:"Poley", edad:"18", ciudad:"Amate"};
+
+        let obj_serializados = enviar(obj); // serialización
+        let obj_recuperados = recibir(obj_serializados); // deserialización
+
+        $("#nombre").text(obj_recuperados.nombre);
+        $("#apellidos").text(obj_recuperados.apellidos);
+        $("#edad").text(obj_recuperados.edad);
+        $("#ciudad").text(obj_recuperados.ciudad);
+
+    });
+
+    // función para serializar
+    function enviar(obj){
+        return JSON.stringify(obj);
     }
-    function deserializar(objJson){
-        return JSON.parse(objJson)
+
+    // función para deserializar
+    function recibir(json){
+        return JSON.parse(json);
     }
 
 </script>
+
+</body>
 </html>

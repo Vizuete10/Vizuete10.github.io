@@ -32,28 +32,68 @@
     </tbody>
 </table>
 
+<h3>Modificar datos</h3>
+
+<form id="formulario">
+
+    <label>Nombre:</label>
+    <input type="text" id="nombreInput"><br><br>
+
+    <label>Apellidos:</label>
+    <input type="text" id="apellidosInput"><br><br>
+
+    <label>Edad:</label>
+    <input type="number" id="edadInput"><br><br>
+
+    <label>Ciudad:</label>
+    <input type="text" id="ciudadInput"><br><br>
+
+    <button type="button" id="btnEnvio">Actualizar tabla</button>
+
+</form>
+
 <script>
+
     $(document).ready(function(){
 
-        // Datos simulando deserialización JSON
+        // Datos iniciales
         let obj = {nombre:"Pedro", apellidos:"Poley", edad:"18", ciudad:"Amate"};
 
-        let obj_serializados = enviar(obj); // serialización
-        let obj_recuperados = recibir(obj_serializados); // deserialización
+        actualizarTabla(obj);
 
-        $("#nombre").text(obj_recuperados.nombre);
-        $("#apellidos").text(obj_recuperados.apellidos);
-        $("#edad").text(obj_recuperados.edad);
-        $("#ciudad").text(obj_recuperados.ciudad);
+        $("#btnEnvio").click(function(){
+
+
+            let nuevoObj = {
+                nombre: $("#nombreInput").val(),
+                apellidos: $("#apellidosInput").val(),
+                edad: $("#edadInput").val(),
+                ciudad: $("#ciudadInput").val()
+            };
+
+            let obj_serializados = enviar(nuevoObj);
+            let obj_recuperados = recibir(obj_serializados);
+
+            actualizarTabla(obj_recuperados);
+
+        });
 
     });
 
-    // función para serializar
+    // función para actualizar tabla
+    function actualizarTabla(obj){
+        $("#nombre").text(obj.nombre);
+        $("#apellidos").text(obj.apellidos);
+        $("#edad").text(obj.edad);
+        $("#ciudad").text(obj.ciudad);
+    }
+
+    // serializar
     function enviar(obj){
         return JSON.stringify(obj);
     }
 
-    // función para deserializar
+    // deserializar
     function recibir(json){
         return JSON.parse(json);
     }

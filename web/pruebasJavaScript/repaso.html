@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Repaso</title>
+</head>
+<body>
+
+<input id="txt" type="text"/>
+<button onClick="añadir()">Añadir</button>
+<ul id="lista"></ul>
+</body>
+<script>
+    // Prueba 1
+    let nombre = "Alvaro Poley";
+    let edad = 18;
+    console.log(`Me llamo ${nombre} y tengo ${edad} años`);
+
+
+    // Prueba 2
+    let numero = 9;
+    if (numero % 2 === 0) {
+        console.log("El número es par");
+    } else {
+        console.log("El número es impar");
+    }
+
+    // Prueba 3
+    function esBisiesto(año) {
+        return (año % 4 === 0 && año % 100 !== 0) || (año % 400 === 0);
+    }
+
+    console.log(esBisiesto(2024)); // true
+
+    // Prueba 4
+    let arr = [1, 2, 3, 4];
+    arr.push(5);
+    arr.shift();
+    console.log(arr);
+
+    // Prueba 5
+        function añadir() {
+        const val = document.getElementById("txt").value;
+        if (!val) return;
+        const li = document.createElement("li");
+        li.textContent = val;
+        const btn = document.createElement("button");
+        btn.textContent = "X";
+        btn.onclick = () => li.remove();
+        li.appendChild(btn);
+        document.getElementById("lista").appendChild(li);
+        document.getElementById("txt").value = "";
+    }
+</script>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ejercicio 5</title>
+</head>
+<body>
+<h1>Ejercicio 5</h1>
+<p>Adivina el número</p>
+<input type="number" id="inputNumero" min="1" max="100" placeholder="Introduce tu número">
+<br>
+<button id="btnComprobar" onclick="comprobar()">Comprobar</button>
+<button id="btnReiniciar" onclick="reiniciarJuego()">Jugar nueva ronda</button>
+
+<br>
+<p id="mensaje1"></p>
+<p id="mensaje2"></p>
+
+<br><br>
+<p>Puntos Totales: <strong id="puntos">0</strong></p>
+<p>Cartera actual: <strong id="cartera">10</strong> puntos</p>
+
+<div class="stats">
+    <p>Partidas jugadas: <span id="partidasJugadas">0</span></p>
+    <p>Partidas ganadas: <span id="partidasGanadas">0</span></p>
+    <p>Porcentaje de acierto: <span id="porcentajeAcierto">0</span>%</p>
+</div>
+
+</body>
+<script>
+    let puntos = 0;
+    let cartera = 10;
+    let jugadas = 0;
+    let ganadas = 0;
+    let numeroUsuario;
+    iniciarJuego()
+
+    function iniciarJuego() {
+        numeroPensado = Math.floor(Math.random() * 100) + 1;
+        document.getElementById("mensaje1").innerText = "¡He pensado un número! Intenta adivinarlo.";
+        document.getElementById("mensaje1").style.color = "black";
+        document.getElementById("inputNumero").value = "";
+        document.getElementById("inputNumero").disabled = false;
+        document.getElementById("btnComprobar").disabled = false;
+        document.getElementById("btnReiniciar").style.display = "none";
+    }
+
+    function reiniciarJuego() {
+        numeroPensado = Math.floor(Math.random() * 100) + 1;
+        cartera = 10;
+        document.getElementById("cartera").innerText = cartera;
+        document.getElementById("mensaje1").innerText = "¡He pensado un número! Intenta adivinarlo.";
+        document.getElementById("mensaje1").style.color = "black";
+        document.getElementById("inputNumero").value = "";
+        document.getElementById("inputNumero").disabled = false;
+        document.getElementById("btnComprobar").disabled = false;
+        document.getElementById("btnReiniciar").style.display = "block";
+        document.getElementById("partidasJugadas").innerText = jugadas;
+        document.getElementById("partidasGanadas").innerText = ganadas;
+    }
+
+    function comprobar(){
+        jugadas++;
+        numeroUsuario = parseInt(document.getElementById("inputNumero").value);
+        if (numeroUsuario === numeroPensado) {
+
+            puntos += cartera;
+            ganadas++;
+
+            document.getElementById("puntos").innerText = puntos;
+            document.getElementById("cartera").innerText = cartera;
+            document.getElementById("partidasJugadas").innerText = jugadas;
+            document.getElementById("mensaje1").innerText = "¡Has acertado! El número era el " + numeroPensado + ". Has ganado " + cartera + " puntos.";
+            document.getElementById("mensaje1").style.color = "green";
+
+            finalizarRonda();
+
+        } else {
+            cartera--;
+            document.getElementById("mensaje1").innerText = "¡Has fallado! El número pensado no es el " + numeroUsuario + ". Has perdido 1 punto.";
+            document.getElementById("mensaje1").style.color = "red";
+            document.getElementById("cartera").innerText = cartera;
+            document.getElementById("puntos").innerText = puntos;
+            document.getElementById("partidasJugadas").innerText = jugadas;
+
+            if (numeroUsuario > numeroPensado) {
+                document.getElementById("mensaje2").innerText = "El número pensado es menor que " + numeroUsuario;
+            } else {
+                document.getElementById("mensaje2").innerText = "El número pensado es mayor que " + numeroUsuario;
+            }
+        }
+        if (cartera === 0) {
+            alert("¡Has perdido! El número era " + numeroPensado);
+            finalizarRonda();
+        }
+    }
+    function finalizarRonda() {
+        // Desactivamos el input y el botón de comprobar
+        document.getElementById("inputNumero").disabled = true;
+        document.getElementById("btnComprobar").disabled = true;
+
+        // Mostramos el botón de reiniciar
+        document.getElementById("btnReiniciar").style.display = "block";
+
+        // Actualizamos estadísticas
+        document.getElementById("partidasJugadas").innerText = jugadas;
+        document.getElementById("partidasGanadas").innerText = ganadas;
+
+        let porcentaje = (ganadas / jugadas) * 100;
+        document.getElementById("porcentajeAcierto").innerText = porcentaje.toFixed(2);
+    }
+
+</script>
+</html>

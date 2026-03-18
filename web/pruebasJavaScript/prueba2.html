@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>El Ahorcado</title>
+    <style>
+        /* ── Estilos generales ── */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: #1a1a2e;
+            color: #e0e0e0;
+            font-family: 'Courier New', monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 1rem;
+            min-height: 100vh;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            letter-spacing: 0.3em;
+            color: #a78bfa;
+            margin-bottom: 0.5rem;
+        }
+
+        /* ── Contenedor principal: dos columnas ── */
+        .juego {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 2rem;
+            margin-top: 1.5rem;
+            width: 100%;
+            max-width: 750px;
+        }
+
+        /* ── Panel izquierdo: dibujo del ahorcado ── */
+        .panel-izq {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        /* El dibujo del ahorcado usa texto PRE (arte ASCII) */
+        #dibujo {
+            background: #16213e;
+            border: 1px solid #2e2e6e;
+            border-radius: 10px;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            line-height: 1.4;
+            white-space: pre;        /* Respeta los espacios y saltos de línea */
+            color: #e0e0e0;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Caja de intentos restantes */
+        #intentos {
+            background: #16213e;
+            border: 1px solid #2e2e6e;
+            border-radius: 8px;
+            padding: 0.7rem 1.2rem;
+            text-align: center;
+            width: 100%;
+        }
+        #intentos span {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #f87171;
+        }
+
+        /* ── Panel derecho: palabra, teclado, mensajes ── */
+        .panel-der {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        /* Categoría */
+        #categoria {
+            font-size: 0.85rem;
+            color: #a78bfa;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+
+        /* Palabra con guiones */
+        #palabra {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        /* Cada letra de la palabra es un span */
+        #palabra span {
+            display: inline-block;
+            width: 28px;
+            text-align: center;
+            font-size: 1.6rem;
+            font-weight: bold;
+            border-bottom: 3px solid #6d6d9e;
+            color: #fff;
+            padding-bottom: 2px;
+            letter-spacing: 0;
+        }
+
+        /* ── Teclado visual ── */
+        #teclado {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            max-width: 380px;
+        }
+
+        #teclado button {
+            width: 38px;
+            height: 38px;
+            border-radius: 6px;
+            border: 1px solid #4a4a7a;
+            background: #16213e;
+            color: #e0e0e0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.15s, transform 0.1s;
+        }
+        #teclado button:hover:not(:disabled) {
+            background: #2e2e6e;
+            transform: scale(1.1);
+        }
+
+        /* Letra acertada → verde */
+        #teclado button.acierto {
+            background: #166534;
+            border-color: #4ade80;
+            color: #4ade80;
+        }
+
+        /* Letra fallada → rojo */
+        #teclado button.fallo {
+            background: #7f1d1d;
+            border-color: #f87171;
+            color: #f87171;
+        }
+
+        /* Botones deshabilitados no permiten clic */
+        #teclado button:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        /* ── Mensaje de victoria o derrota ── */
+        #mensaje {
+            font-size: 1.2rem;
+            font-weight: bold;
+            padding: 0.8rem 1.2rem;
+            border-radius: 8px;
+            display: none; /* Oculto por defecto */
+        }
+        #mensaje.victoria {
+            background: #14532d;
+            color: #4ade80;
+            border: 1px solid #4ade80;
+            display: block;
+        }
+        #mensaje.derrota {
+            background: #7f1d1d;
+            color: #f87171;
+            border: 1px solid #f87171;
+            display: block;
+        }
+
+        /* ── Botón reiniciar ── */
+        #btnReiniciar {
+            display: none; /* Oculto hasta que termine la partida */
+            padding: 0.7rem 1.8rem;
+            background: #7c3aed;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            letter-spacing: 0.1em;
+            transition: background 0.2s;
+        }
+        #btnReiniciar:hover { background: #5b21b6; }
+
+        /* ── Estadísticas ── */
+        #stats {
+            margin-top: 2rem;
+            background: #16213e;
+            border: 1px solid #2e2e6e;
+            border-radius: 10px;
+            padding: 1rem 1.5rem;
+            width: 100%;
+            max-width: 750px;
+            font-size: 0.9rem;
+            color: #a0a0c0;
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        #stats span { color: #a78bfa; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<h1>EL AHORCADO</h1>
+
+<div class="juego">
+
+    <!-- Panel izquierdo -->
+    <div class="panel-izq">
+        <pre id="dibujo"></pre>
+        <div id="intentos">Intentos: <span id="numIntentos">6</span> / 6</div>
+    </div>
+
+    <!-- Panel derecho -->
+    <div class="panel-der">
+        <div id="categoria">Categoría: <strong id="textCategoria"></strong></div>
+        <div id="palabra"></div>
+        <div id="teclado"></div>
+        <div id="mensaje"></div>
+        <button id="btnReiniciar" onclick="iniciarJuego()">Nueva partida</button>
+    </div>
+
+</div>
+
+<!-- Estadísticas globales -->
+<div id="stats">
+    Partidas jugadas: <span id="statJugadas">0</span>
+    &nbsp;|&nbsp; Ganadas: <span id="statGanadas">0</span>
+    &nbsp;|&nbsp; % Aciertos: <span id="statPct">0%</span>
+</div>
+
+
+<script>
+
+    // ═══════════════════════════════════════════
+    // 1. DATOS: array de palabras con categorías
+    // ═══════════════════════════════════════════
+    // Cada elemento es un objeto con dos propiedades:
+    //   - palabra:    la palabra en MAYÚSCULAS
+    //   - categoria:  a qué grupo pertenece
+
+    const palabras = [
+        { palabra: "ELEFANTE",     categoria: "Animales" },
+        { palabra: "COCODRILO",    categoria: "Animales" },
+        { palabra: "MARIPOSA",     categoria: "Animales" },
+        { palabra: "TIBURON",      categoria: "Animales" },
+        { palabra: "JAVASCRIPT",   categoria: "Tecnología" },
+        { palabra: "NAVEGADOR",    categoria: "Tecnología" },
+        { palabra: "TECLADO",      categoria: "Tecnología" },
+        { palabra: "ALGORITMO",    categoria: "Tecnología" },
+        { palabra: "BARCELONA",    categoria: "Ciudades" },
+        { palabra: "TOKIO",        categoria: "Ciudades" },
+        { palabra: "AMSTERDAM",    categoria: "Ciudades" },
+        { palabra: "ESTOCOLMO",    categoria: "Ciudades" },
+        { palabra: "CHOCOLATE",    categoria: "Comida" },
+        { palabra: "GAZPACHO",     categoria: "Comida" },
+        { palabra: "ESPAGUETI",    categoria: "Comida" },
+        { palabra: "HAMBURGUESA",  categoria: "Comida" },
+        { palabra: "AVENTURA",     categoria: "Cine" },
+        { palabra: "COMEDIA",      categoria: "Cine" },
+        { palabra: "DOCUMENTAL",   categoria: "Cine" },
+        { palabra: "ANIMACION",    categoria: "Cine" },
+    ];
+
+
+    // ═══════════════════════════════════════════
+    // 2. ESTADOS del ahorcado (7 fases: 0 fallos → 6 fallos)
+    // ═══════════════════════════════════════════
+    // Cada elemento del array es un string multi-línea (arte ASCII)
+    // que representa el dibujo del ahorcado según los fallos acumulados.
+
+    const DIBUJOS = [
+        // 0 fallos — solo la horca vacía
+        `
+  +---+
+  |   |
+      |
+      |
+      |
+      |
+=========`,
+        // 1 fallo — aparece la cabeza
+        `
+  +---+
+  |   |
+  O   |
+      |
+      |
+      |
+=========`,
+        // 2 fallos — aparece el tronco
+        `
+  +---+
+  |   |
+  O   |
+  |   |
+      |
+      |
+=========`,
+        // 3 fallos — brazo izquierdo
+        `
+  +---+
+  |   |
+  O   |
+ /|   |
+      |
+      |
+=========`,
+        // 4 fallos — brazo derecho
+        `
+  +---+
+  |   |
+  O   |
+ /|\\  |
+      |
+      |
+=========`,
+        // 5 fallos — pierna izquierda
+        `
+  +---+
+  |   |
+  O   |
+ /|\\  |
+ /    |
+      |
+=========`,
+        // 6 fallos — pierna derecha (muerto)
+        `
+  +---+
+  |   |
+  O   |
+ /|\\  |
+ / \\  |
+      |
+=========`,
+    ];
+
+
+    // ═══════════════════════════════════════════
+    // 3. VARIABLES DE ESTADO de la partida actual
+    // ═══════════════════════════════════════════
+
+    let palabraSecreta   = "";       // La palabra que hay que adivinar
+    let letrasAcertadas  = new Set(); // Set: letras que el jugador acertó
+    let letrasUsadas     = new Set(); // Set: TODAS las letras pulsadas (aciertos + fallos)
+    let intentosRestantes = 6;        // Empieza con 6 intentos
+    let juegoTerminado   = false;     // Flag para bloquear el teclado
+
+    // Estadísticas globales (se acumulan entre partidas)
+    let partidas = 0;
+    let ganadas  = 0;
+
+
+    // ═══════════════════════════════════════════
+    // 4. FUNCIÓN: iniciarJuego()
+    // ═══════════════════════════════════════════
+    // Se llama al cargar la página y al pulsar "Nueva partida".
+    // Resetea todo el estado y dibuja la UI inicial.
+
+    function iniciarJuego() {
+
+        // 4a. Elegir una palabra aleatoria del array
+        // Math.random()         → número entre 0 y 1
+        // * palabras.length     → escala al tamaño del array
+        // Math.floor(...)       → redondea hacia abajo para obtener índice entero
+        const indice = Math.floor(Math.random() * palabras.length);
+        const seleccion = palabras[indice];
+
+        palabraSecreta    = seleccion.palabra;
+        letrasAcertadas   = new Set();   // Vacía el Set de aciertos
+        letrasUsadas      = new Set();   // Vacía el Set de letras usadas
+        intentosRestantes = 6;
+        juegoTerminado    = false;
+
+        // 4b. Mostrar categoría
+        document.getElementById("textCategoria").textContent = seleccion.categoria;
+
+        // 4c. Ocultar mensaje y botón reiniciar
+        const elMensaje = document.getElementById("mensaje");
+        elMensaje.textContent = "";
+        elMensaje.className   = "";      // Quita clases "victoria" o "derrota"
+        elMensaje.style.display = "none";
+        document.getElementById("btnReiniciar").style.display = "none";
+
+        // 4d. Renderizar las partes visuales
+        actualizarDibujo();
+        actualizarPalabra();
+        crearTeclado();
+        actualizarIntentos();
+    }
+
+
+    // ═══════════════════════════════════════════
+    // 5. FUNCIÓN: crearTeclado()
+    // ═══════════════════════════════════════════
+    // Genera dinámicamente los 27 botones del abecedario en el div#teclado.
+
+    function crearTeclado() {
+        const divTeclado = document.getElementById("teclado");
+        divTeclado.innerHTML = ""; // Limpia el teclado anterior
+
+        const abecedario = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+
+        // Recorre cada letra y crea un botón
+        for (let i = 0; i < abecedario.length; i++) {
+            const letra = abecedario[i];
+
+            const btn = document.createElement("button");
+            btn.textContent = letra;
+            btn.id = "btn-" + letra; // id único para localizarlo después
+
+            // Al hacer clic, llama a procesarLetra con esa letra
+            btn.addEventListener("click", function() {
+                procesarLetra(letra);
+            });
+
+            divTeclado.appendChild(btn);
+        }
+    }
+
+
+    // ═══════════════════════════════════════════
+    // 6. FUNCIÓN: procesarLetra(letra)
+    // ═══════════════════════════════════════════
+    // Lógica principal: qué pasa cuando el jugador pulsa una letra.
+
+    function procesarLetra(letra) {
+
+        // Ignora el clic si el juego ya terminó o la letra ya fue usada
+        if (juegoTerminado) return;
+        if (letrasUsadas.has(letra)) return;
+
+        // Registra la letra como usada
+        letrasUsadas.add(letra);
+
+        // Deshabilita el botón de esa letra
+        const btn = document.getElementById("btn-" + letra);
+        btn.disabled = true;
+
+        // Comprueba si la letra está en la palabra secreta
+        if (palabraSecreta.includes(letra)) {
+            // ACIERTO
+            letrasAcertadas.add(letra);
+            btn.classList.add("acierto");
+            actualizarPalabra();
+            comprobarVictoria();       // ¿Ya adivinó todas las letras?
+
+        } else {
+            // FALLO
+            intentosRestantes--;       // Resta un intento
+            btn.classList.add("fallo");
+            actualizarDibujo();        // Avanza el dibujo del ahorcado
+            actualizarIntentos();
+            comprobarDerrota();        // ¿Se acabaron los intentos?
+        }
+    }
+
+
+    // ═══════════════════════════════════════════
+    // 7. FUNCIÓN: actualizarPalabra()
+    // ═══════════════════════════════════════════
+    // Renderiza la palabra en el div#palabra.
+    // Muestra la letra si fue acertada, o "_" si no.
+
+    function actualizarPalabra() {
+        const divPalabra = document.getElementById("palabra");
+        divPalabra.innerHTML = ""; // Limpia antes de redibujar
+
+        // Recorre cada letra de la palabra secreta
+        for (let i = 0; i < palabraSecreta.length; i++) {
+            const letra = palabraSecreta[i];
+            const span = document.createElement("span");
+
+            // Si la letra está en el Set de acertadas → muéstrala
+            // Si no → muestra un guión bajo
+            span.textContent = letrasAcertadas.has(letra) ? letra : "_";
+
+            divPalabra.appendChild(span);
+        }
+    }
+
+
+    // ═══════════════════════════════════════════
+    // 8. FUNCIÓN: actualizarDibujo()
+    // ═══════════════════════════════════════════
+    // Elige qué fase del ahorcado mostrar según los fallos.
+    // Fallos = 6 - intentosRestantes
+
+    function actualizarDibujo() {
+        const fallos = 6 - intentosRestantes;
+        document.getElementById("dibujo").textContent = DIBUJOS[fallos];
+    }
+
+
+    // ═══════════════════════════════════════════
+    // 9. FUNCIÓN: actualizarIntentos()
+    // ═══════════════════════════════════════════
+    // Actualiza el número de intentos en pantalla.
+
+    function actualizarIntentos() {
+        document.getElementById("numIntentos").textContent = intentosRestantes;
+    }
+
+
+    // ═══════════════════════════════════════════
+    // 10. FUNCIÓN: comprobarVictoria()
+    // ═══════════════════════════════════════════
+    // Gana si TODAS las letras de la palabra están en letrasAcertadas.
+    // Usamos every() para comprobar que se cumple para cada letra.
+
+    function comprobarVictoria() {
+        // every() devuelve true solo si la condición es verdadera para TODAS las letras
+        const gano = [...palabraSecreta].every(letra => letrasAcertadas.has(letra));
+
+        if (gano) {
+            juegoTerminado = true;
+            partidas++;
+            ganadas++;
+            actualizarStats();
+
+            const elMensaje = document.getElementById("mensaje");
+            elMensaje.textContent = "¡Enhorabuena! Adivinaste la palabra 🎉";
+            elMensaje.className = "victoria";
+            elMensaje.style.display = "block";
+            document.getElementById("btnReiniciar").style.display = "inline-block";
+
+            // Deshabilita todo el teclado
+            bloquearTeclado();
+        }
+    }
+
+
+    // ═══════════════════════════════════════════
+    // 11. FUNCIÓN: comprobarDerrota()
+    // ═══════════════════════════════════════════
+    // Pierde si los intentos llegan a 0.
+
+    function comprobarDerrota() {
+        if (intentosRestantes <= 0) {
+            juegoTerminado = true;
+            partidas++;
+            actualizarStats();
+
+            // Revela la palabra completa al perder
+            const divPalabra = document.getElementById("palabra");
+            divPalabra.innerHTML = "";
+            for (let i = 0; i < palabraSecreta.length; i++) {
+                const span = document.createElement("span");
+                span.textContent = palabraSecreta[i];
+                span.style.color = "#f87171"; // Rojo para mostrar la solución
+                divPalabra.appendChild(span);
+            }
+
+            const elMensaje = document.getElementById("mensaje");
+            elMensaje.textContent = `¡Perdiste! La palabra era: ${palabraSecreta} 💀`;
+            elMensaje.className = "derrota";
+            elMensaje.style.display = "block";
+            document.getElementById("btnReiniciar").style.display = "inline-block";
+
+            bloquearTeclado();
+        }
+    }
+
+
+    // ═══════════════════════════════════════════
+    // 12. FUNCIÓN: bloquearTeclado()
+    // ═══════════════════════════════════════════
+    // Deshabilita todos los botones del teclado al terminar la partida.
+
+    function bloquearTeclado() {
+        const botones = document.querySelectorAll("#teclado button");
+        // querySelectorAll devuelve todos los botones dentro de #teclado
+        botones.forEach(btn => btn.disabled = true);
+    }
+
+
+    // ═══════════════════════════════════════════
+    // 13. FUNCIÓN: actualizarStats()
+    // ═══════════════════════════════════════════
+    // Actualiza el panel de estadísticas globales.
+
+    function actualizarStats() {
+        document.getElementById("statJugadas").textContent = partidas;
+        document.getElementById("statGanadas").textContent = ganadas;
+        // Porcentaje con un decimal
+        const pct = partidas > 0 ? ((ganadas / partidas) * 100).toFixed(1) : 0;
+        document.getElementById("statPct").textContent = pct + "%";
+    }
+
+
+    // ═══════════════════════════════════════════
+    // 14. ARRANQUE: llamar a iniciarJuego() al cargar la página
+    // ═══════════════════════════════════════════
+    iniciarJuego();
+
+</script>
+</body>
+</html>

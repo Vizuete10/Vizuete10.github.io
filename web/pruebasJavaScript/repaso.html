@@ -40,10 +40,13 @@
 
     // Prueba 5
         function añadir() {
+
         const val = document.getElementById("txt").value;
         if (!val) return;
+
         const li = document.createElement("li");
         li.textContent = val;
+
         const btn = document.createElement("button");
         btn.textContent = "X";
         btn.onclick = () => li.remove();

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestor de Movimientos Bancarios</title>
+</head>
+<body>
+
+<h1>Gestor de Movimientos Bancarios</h1>
+
+<fieldset>
+    <input type="text" id="Concepto" placeholder="Ingresa tu concepto">
+</fieldset>
+<br>
+
+<fieldset>
+    <input type="number" id="Cantidad" placeholder="Ingresa la cantidad">
+</fieldset>
+
+<fieldset>
+    <legend>Selecciona una opción del menú desplegable</legend>
+    <label for="opciones">Elige una opción:</label>
+    <select id="opciones" name="opciones">
+
+        <option disabled selected>--Selecciona una opción--</option>
+        <option value="gasto">Gasto</option>
+        <option value="ingreso">Ingreso</option>
+    </select><br><br>
+</fieldset>
+
+<button onclick="agregarMovimiento()">Agregar movimiento a la lista</button>
+<br>
+<br>
+<p>Suma acumulativa</p>
+<p id="suma"> </p>
+<h2> Tabla de movimientos </h2>
+<table id="movimientos" border="1">
+    <tr>
+        <th>
+            Concepto
+        </th>
+        <th>
+            Ingreso
+        </th>
+        <th>
+            Gasto
+        </th>
+        <th>
+            Suma
+        </th>
+    </tr>
+
+</table>
+
+
+
+<script>
+
+    let concepto;
+    let cantidad;
+    let saldoAcumulado = 0;
+    let tipo;
+
+    function agregarMovimiento(){
+
+        concepto = document.getElementById('Concepto').value;
+        cantidad = parseFloat(document.getElementById('Cantidad').value);
+        tipo = document.getElementById('opciones').value;
+
+        if(!comprobarEntradas(concepto, cantidad, tipo)) return;
+
+        if(tipo === "gasto"){
+            saldoAcumulado -= cantidad;
+        } else {
+            saldoAcumulado += cantidad;
+        }
+
+        añadir();
+        añadirSuma();
+    }
+
+    function comprobarEntradas(concepto, cantidad, tipo) {
+
+        if(!concepto || concepto.trim() === ""){
+            alert("Debe añadir un concepto");
+            return false;
+        }
+
+        if(isNaN(cantidad) || cantidad <= 0){
+            alert("Debe ingresar una cantidad válida");
+            return false;
+        }
+
+        if(tipo !== "gasto" && tipo !== "ingreso"){
+            alert("Debe seleccionar una opción");
+            return false;
+        }
+
+        return true;
+    }
+
+    function añadir(){
+        const tr = document.createElement("tr");
+        document.getElementById("movimientos").appendChild(tr);
+
+        // Concepto
+        const tdConcepto = document.createElement("td");
+        tdConcepto.innerText = concepto;
+        tr.appendChild(tdConcepto);
+
+        // Ingreso
+        const tdIngreso = document.createElement("td");
+        tdIngreso.innerText = (tipo === "ingreso") ? cantidad : "";
+        tr.appendChild(tdIngreso);
+
+        // Gasto
+        const tdGasto = document.createElement("td");
+        tdGasto.innerText = (tipo === "gasto") ? cantidad : "";
+        tr.appendChild(tdGasto);
+
+        // Suma
+        const tdSuma = document.createElement("td");
+        tdSuma.innerText = saldoAcumulado;
+        tr.appendChild(tdSuma);
+
+        // Botón eliminar
+        const btn = document.createElement("button");
+        btn.textContent = "X";
+        btn.onclick = () => {
+            tr.remove();
+            recalcularSaldo();
+        };
+        tr.appendChild(btn);
+    }
+
+    function añadirSuma(){
+        document.getElementById("suma").innerText = saldoAcumulado;
+
+        if(saldoAcumulado >= 0){
+            document.getElementById("suma").style.color = "black";
+        }else{
+            document.getElementById("suma").style.color = "red";
+        }
+    }
+
+    function recalcularSaldo(){
+        saldoAcumulado = 0;
+        const filas = document.querySelectorAll("#movimientos tr");
+
+        filas.forEach((fila, index) => {
+            if(index === 0) return; // saltar cabecera
+
+            const ingreso = parseFloat(fila.children[1].innerText) || 0;
+            const gasto = parseFloat(fila.children[2].innerText) || 0;
+
+            saldoAcumulado += ingreso - gasto;
+            fila.children[3].innerText = saldoAcumulado;
+        });
+
+        añadirSuma();
+    }
+
+</script>
+
+</body>
+</html>

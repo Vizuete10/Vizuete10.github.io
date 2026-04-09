@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Prueba Recepción</title>
+</head>
+<body>
+<div class="usuario-info">
+
+</div>
+<script>
+    // Pedimos la información de un usuario específico
+    fetch('https://jsonplaceholder.typicode.com/users/1')
+        // Convertimos el texto JSON a Objeto JS
+        .then(respuesta => respuesta.json())
+        .then(usuario => {
+            // Ejercicio: Acceder a propiedades anidadas
+            console.log("Nombre del usuario:", usuario.name);
+            console.log("Ciudad:", usuario.address.city);
+            console.log("Telefono:", usuario.phone);
+            console.log("El usuario "+ usuario.name+" vive en la ciudad " + usuario.address.city + " y su teléfono es " + usuario.phone);
+        });
+</script>
+</body>
+</html>

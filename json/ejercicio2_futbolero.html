@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Equipos de la Premier League</title>
+  <link rel="stylesheet" href="estilos_futbolero.css">
+</head>
+<body>
+<div class="container">
+  <h1>Premier League Stats</h1>
+
+  <select id="teamSelect">
+    <option value="">-- Selecciona un equipo --</option>
+    <option value="Arsenal">Arsenal</option>
+    <option value="Aston Villa">Aston Villa</option>
+    <option value="AFC Bournemouth">AFC Bournemouth</option>
+    <option value="Brentford">Brentford</option>
+    <option value="Brighton & Hove Albion">Brighton & Hove Albion</option>
+    <option value="Chelsea">Chelsea</option>
+    <option value="Crystal Palace">Crystal Palace</option>
+    <option value="Everton">Everton</option>
+    <option value="Fulham">Fulham</option>
+    <option value="Ipswich Town">Ipswich Town</option>
+    <option value="Leicester City">Leicester City</option>
+    <option value="Liverpool">Liverpool</option>
+    <option value="Manchester City">Manchester City</option>
+    <option value="Manchester United">Manchester United</option>
+    <option value="Newcastle United">Newcastle United</option>
+    <option value="Nottingham Forest">Nottingham Forest</option>
+    <option value="Southampton">Southampton</option>
+    <option value="Tottenham Hotspur">Tottenham Hotspur</option>
+    <option value="West Ham United">West Ham United</option>
+    <option value="Wolverhampton Wanderers">Wolverhampton Wanderers</option>
+  </select>
+
+  <div id="loading">Consultando base de datos...</div>
+  <div id="teamInfo" class="team-info">
+    <img id="teamBadge" src="" alt="Escudo">
+    <h2 id="teamName"></h2>
+
+    <div class="info-grid">
+      <p><strong>Estadio:</strong><br><span id="teamStadium"></span></p>
+      <p><strong>Ubicación:</strong><br><span id="teamLocation"></span></p>
+      <p><strong>Fundación:</strong><br><span id="teamYear"></span></p>
+      <p><strong>Capacidad:</strong><br><span id="teamCapacity"></span></p>
+    </div>
+
+    <div class="description" id="teamDescription"></div>
+  </div>
+</div>
+<script>
+  const teamSelect = document.getElementById('teamSelect');
+  const teamInfo = document.getElementById('teamInfo');
+  const loading = document.getElementById('loading');
+
+  teamSelect.addEventListener('change', async function() {
+    const teamName = this.value;
+
+    if (!teamName) {
+      teamInfo.style.display = 'none';
+      return;
+    }
+
+    // Mostramos estado de carga
+    teamInfo.style.display = 'none';
+    loading.style.display = 'block';
+
+    try {
+      const url = `https://www.thesportsdb.com/api/v1/json/123/searchteams.php?t=${encodeURIComponent(teamName)}`;
+
+      const response = await fetch(url);
+      const data = await response.json();
+
+      if (data.teams && data.teams.length > 0) {
+        const team = data.teams[0];
+
+        document.getElementById('teamBadge').src = team.strTeamBadge;
+        document.getElementById('teamName').textContent = team.strTeam;
+        document.getElementById('teamStadium').textContent = team.strStadium;
+        document.getElementById('teamLocation').textContent = team.strLocation;
+        document.getElementById('teamYear').textContent = team.intFormedYear;
+        document.getElementById('teamCapacity').textContent = parseInt(team.intStadiumCapacity).toLocaleString(); // Formatea el número con comas
+
+
+        const description = team.strDescriptionES || team.strDescriptionEN || "La descripción de este equipo no está disponible en la base de datos.";
+        document.getElementById('teamDescription').textContent = description;
+
+        // Mostrar el contenedor y ocultar la carga
+        loading.style.display = 'none';
+        teamInfo.style.display = 'block';
+      } else {
+        alert("No se encontró información para este equipo en la API.");
+        loading.style.display = 'none';
+      }
+
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Hubo un problema de conexión con TheSportsDB.");
+      loading.style.display = 'none';
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ejercicio 2: Añadir filas con jQuery</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+<h2>Ejercicio 2: Consulta y Registro con jQuery</h2>
+
+<div class="formulario">
+    <label for="inputNombre">Nombre:</label>
+    <input type="text" id="inputNombre" placeholder="Ej: Éver"><br>
+
+    <label for="inputApellidos">Apellidos:</label>
+    <input type="text" id="inputApellidos" placeholder="Ej: Banega"><br>
+
+    <label for="inputEdad">Edad:</label>
+    <input type="number" id="inputEdad"><br>
+
+    <label for="inputCiudad">Ciudad:</label>
+    <input type="text" id="inputCiudad" placeholder="Ej: Rosario"><br><br>
+
+    <button id="btnGuardar">Guardar y mostrar</button>
+</div>
+
+<p id="resultadoJson"></p>
+<p id="resultadoObjeto"></p>
+
+<table id="tablaDatos" style="display: none;" border="1">
+    <thead>
+    <tr>
+        <th>Nombre</th>
+        <th>Apellidos</th>
+        <th>Edad</th>
+        <th>Ciudad</th>
+    </tr>
+    </thead>
+    <tbody id="cuerpoTabla">
+    </tbody>
+</table>
+
+<script>
+    // NUEVA FUNCIÓN en jQuery: Crea el TR y los TD en cadena
+    function crearFila(datos) {
+        // Creamos la fila vacía
+        const $fila = $("<tr>");
+
+        // Creamos cada celda, le añadimos el texto y la adjuntamos a la fila
+        $fila.append( $("<td>").text(datos.nombre) )
+            .append( $("<td>").text(datos.apellidos) )
+            .append( $("<td>").text(datos.edad) )
+            .append( $("<td>").text(datos.ciudad) );
+
+        return $fila;
+    }
+
+    // Esperamos a que el documento esté listo
+    $(document).ready(function() {
+
+        // Evento click del botón
+        $("#btnGuardar").on("click", function() {
+
+            // Recogemos valores con .val()
+            const datosUsuario = {
+                nombre: $("#inputNombre").val(),
+                apellidos: $("#inputApellidos").val(),
+                edad: $("#inputEdad").val(),
+                ciudad: $("#inputCiudad").val(),
+            };
+
+            // $.trim() elimina los espacios en blanco al principio y al final
+            if ($.trim(datosUsuario.nombre) === "" || $.trim(datosUsuario.apellidos) === "") {
+                alert("Por favor, rellena al menos el nombre y los apellidos.");
+                return;
+            }
+
+            // Mantenemos la conversión estándar de JavaScript a JSON y viceversa
+            const stringJSON = JSON.stringify(datosUsuario);
+            $("#resultadoJson").html("<strong>Último JSON Serializado:</strong> " + stringJSON);
+
+            const objetoRecuperado = JSON.parse(stringJSON);
+            const textoRecuperado = `<strong>Último Objeto Recuperado:</strong> nombre:${objetoRecuperado.nombre}, apellidos:${objetoRecuperado.apellidos}, edad:${objetoRecuperado.edad}, ciudad:${objetoRecuperado.ciudad}`;
+            $("#resultadoObjeto").html(textoRecuperado);
+
+            // Creamos la nueva fila (devuelve un objeto jQuery)
+            const $nuevaFila = crearFila(objetoRecuperado);
+
+            // Adjuntamos al cuerpo de la tabla
+            $("#cuerpoTabla").append($nuevaFila);
+
+            // Mostramos la tabla (equivalente a style.display = "table")
+            $("#tablaDatos").show();
+
+            // Vaciamos TODOS los inputs dentro de .formulario de una sola vez
+            $(".formulario input").val("");
+
+            // Devolvemos el foco al primer campo
+            $("#inputNombre").focus();
+        });
+
+    });
+</script>
+
+</body>
+</html>

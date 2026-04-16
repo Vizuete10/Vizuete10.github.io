@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ejercicio 2: Añadir filas</title>
+</head>
+<body>
+<h2>Ejemplo 2: Consulta y Registro de Usuarios</h2>
+
+<div class="formulario">
+    <label for="inputNombre">Nombre:</label>
+    <input type="text" id="inputNombre" placeholder="Ej: Éver"><br>
+
+    <label for="inputApellidos">Apellidos:</label>
+    <input type="text" id="inputApellidos" placeholder="Ej: Banega"><br>
+
+    <label for="inputEdad">Edad:</label>
+    <input type="number" id="inputEdad"><br>
+
+    <label for="inputCiudad">Ciudad:</label>
+    <input type="text" id="inputCiudad" placeholder="Ej: Rosario"><br><br>
+
+    <button onclick="ejecutarEjercicio()">Guardar y mostrar</button>
+</div>
+
+<p id="resultadoJson"></p>
+<p id="resultadoObjeto"></p>
+
+<table id="tablaDatos" style="display: none;" border="1">
+    <thead>
+    <tr>
+        <th>Nombre</th>
+        <th>Apellidos</th>
+        <th>Edad</th>
+        <th>Ciudad</th>
+    </tr>
+    </thead>
+    <tbody id="cuerpoTabla">
+    </tbody>
+</table>
+
+<script>
+    // Función, convertir a JSON
+    function convertirAJSON(objeto) {
+        return JSON.stringify(objeto);
+    }
+
+    // Función, convertir JSON a objeto
+    function convertirAObjeto(cadenaJSON) {
+        return JSON.parse(cadenaJSON);
+    }
+
+    // Crea un TR con sus TD, los rellena y devuelve el TR
+    function crearFila(datos) {
+        // Crear el elemento fila <tr>
+        const fila = document.createElement("tr");
+
+        // Crear las celdas <td>
+        const tdNombre = document.createElement("td");
+        const tdApellidos = document.createElement("td");
+        const tdEdad = document.createElement("td");
+        const tdCiudad = document.createElement("td");
+
+        // Asignar los valores a cada celda
+        tdNombre.textContent = datos.nombre;
+        tdApellidos.textContent = datos.apellidos;
+        tdEdad.textContent = datos.edad;
+        tdCiudad.textContent = datos.ciudad;
+
+        // Adjuntar (append) los <td> al <tr>
+        fila.appendChild(tdNombre);
+        fila.appendChild(tdApellidos);
+        fila.appendChild(tdEdad);
+        fila.appendChild(tdCiudad);
+
+        // Devolver la fila lista para ser insertada
+        return fila;
+    }
+
+    function ejecutarEjercicio() {
+        const datosUsuario = {
+            nombre: document.getElementById("inputNombre").value,
+            apellidos: document.getElementById("inputApellidos").value,
+            edad: document.getElementById("inputEdad").value,
+            ciudad: document.getElementById("inputCiudad").value,
+        };
+
+        // Validar si hay huecos en blanco (.trim() evita que pasen espacios vacíos)
+        if(datosUsuario.nombre.trim() === "" || datosUsuario.apellidos.trim() === "") {
+            alert("Por favor, rellena al menos el nombre y los apellidos.");
+            return;
+        }
+
+        const stringJSON = convertirAJSON(datosUsuario);
+        document.getElementById("resultadoJson").innerHTML = "<strong>Último JSON Serializado:</strong> " + stringJSON;
+
+        const objetoRecuperado = convertirAObjeto(stringJSON);
+        const textoRecuperado = `<strong>Último Objeto Recuperado:</strong> nombre:${objetoRecuperado.nombre}, apellidos:${objetoRecuperado.apellidos}, edad:${objetoRecuperado.edad}, ciudad:${objetoRecuperado.ciudad}`;
+        document.getElementById("resultadoObjeto").innerHTML = textoRecuperado;
+
+        // Llamamos a la función que crea el elemento TR
+        const nuevaFila = crearFila(objetoRecuperado);
+
+        // Obtenemos el tbody y le adjuntamos la nueva fila
+        const cuerpoTabla = document.getElementById("cuerpoTabla");
+        cuerpoTabla.appendChild(nuevaFila);
+
+        // Hacer la tabla visible (por si es la primera vez que se inserta un dato)
+        document.getElementById("tablaDatos").style.display = "table";
+
+        // Limpiar los campos del formulario para el siguiente usuario
+        document.getElementById("inputNombre").value = "";
+        document.getElementById("inputApellidos").value = "";
+        document.getElementById("inputEdad").value = "";
+        document.getElementById("inputCiudad").value = "";
+
+        // Devolver el foco al primer input
+        document.getElementById("inputNombre").focus();
+    }
+</script>
+
+</body>
+</html>

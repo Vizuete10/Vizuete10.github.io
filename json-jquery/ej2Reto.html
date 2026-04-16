@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ejercicio 2: RETO</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+</head>
+<body>
+<h2>Ejercicio 2: RETO</h2>
+
+<div class="formulario">
+    <label for="inputNombre">Nombre:</label>
+    <input type="text" id="inputNombre" placeholder="Ej: Éver"><br>
+
+    <label for="inputApellidos">Apellidos:</label>
+    <input type="text" id="inputApellidos" placeholder="Ej: Banega"><br>
+
+    <label for="inputEdad">Edad:</label>
+    <input type="number" id="inputEdad"><br>
+
+    <label for="inputCiudad">Ciudad:</label>
+    <input type="text" id="inputCiudad" placeholder="Ej: Rosario"><br><br>
+
+    <button id="btnGuardar">Guardar y mostrar</button>
+</div>
+
+<div id="estadisticas">
+    <div class="fila-estadistica">
+        <span id="txtSuma">Suma = 0</span>
+        <span id="txtMaximo">Máximo = 0</span>
+    </div>
+    <div class="fila-estadistica">
+        <span id="txtMedia">Media = 0</span>
+        <span id="txtMinimo">Mínimo = 0</span>
+    </div>
+</div>
+<br>
+
+<table id="tablaDatos" style="display: none;" border="1">
+    <thead>
+    <tr>
+        <th>Nombre</th>
+        <th>Apellidos</th>
+        <th>Edad</th>
+        <th>Ciudad</th>
+    </tr>
+    </thead>
+    <tbody id="cuerpoTabla">
+    </tbody>
+</table>
+
+<script>
+    // Variable global para asignar IDs únicos a cada fila
+    let contadorFilas = 0;
+
+    // Función que crea el TR y los TD
+    function crearFila(datos) {
+        const $fila = $("<tr>");
+        $fila.append( $("<td>").text(datos.nombre) )
+            .append( $("<td>").text(datos.apellidos) )
+            .append( $("<td>").text(datos.edad) )
+            .append( $("<td>").text(datos.ciudad) );
+        return $fila;
+    }
+
+    // Función para recalcular y mostrar estadísticas leyendo la tabla
+    function calcularEstadisticas() {
+        let edades = [];
+
+        // Recorremos todos los TR del cuerpo de la tabla
+        $("#cuerpoTabla tr").each(function() {
+
+            let textoEdad = $(this).find("td").eq(2).text();
+            let edad = parseInt(textoEdad);
+
+            if (!isNaN(edad)) {
+                edades.push(edad);
+            }
+        });
+
+        // Si no hay edades (se borraron todas las filas), reseteamos y ocultamos
+        if (edades.length === 0) {
+            $("#estadisticas").hide();
+            $("#tablaDatos").hide();
+            return;
+        }
+
+        // Cálculos matemáticos
+        let suma = 0;
+        let maximo = edades[0];
+        let minimo = edades[0];
+
+        for (let i = 0; i < edades.length; i++) {
+            suma += edades[i];
+            if (edades[i] > maximo) maximo = edades[i];
+            if (edades[i] < minimo) minimo = edades[i];
+        }
+
+        let media = suma / edades.length;
+
+        // Pintamos los resultados
+        $("#txtSuma").text("Suma = " + suma);
+        $("#txtMaximo").text("Máximo = " + maximo);
+        // Usamos toFixed(2) por si la media tiene muchos decimales
+        $("#txtMedia").text("Media = " + media.toFixed(2));
+        $("#txtMinimo").text("Mínimo = " + minimo);
+
+        // Mostramos el div de estadísticas
+        $("#estadisticas").show();
+    }
+
+    $(document).ready(function() {
+
+        $("#btnGuardar").on("click", function() {
+
+            // RETO: Comprobar que TODOS los campos estén rellenos
+            const camposAValidar = [
+                { id: "#inputNombre", nombre: "nombre" },
+                { id: "#inputApellidos", nombre: "apellidos" },
+                { id: "#inputEdad", nombre: "edad" },
+                { id: "#inputCiudad", nombre: "ciudad" }
+            ];
+
+            for (let i = 0; i < camposAValidar.length; i++) {
+                let valor = $(camposAValidar[i].id).val();
+                if ($.trim(valor) === "") {
+                    // Muestra la alerta indicando exactamente qué campo falla
+                    alert("El campo " + camposAValidar[i].nombre + " es obligatorio.");
+                    return; // Detiene la ejecución si falta algo
+                }
+            }
+
+            // Si llegamos aquí, todo está validado. Recogemos los datos.
+            const datosUsuario = {
+                nombre: $("#inputNombre").val(),
+                apellidos: $("#inputApellidos").val(),
+                edad: $("#inputEdad").val(),
+                ciudad: $("#inputCiudad").val(),
+            };
+
+            const $nuevaFila = crearFila(datosUsuario);
+
+            // RETO: Añadir ID al TR y función onclick para eliminarlo
+            contadorFilas++;
+            const idFila = "fila-" + contadorFilas;
+            $nuevaFila.attr("id", idFila);
+
+            // Al hacer clic en la fila, se elimina usando su ID y recalculamos
+            $nuevaFila.on("click", function() {
+                let idDeEstaFila = $(this).attr("id");
+                $("#" + idDeEstaFila).remove(); // Elimina el TR con remove usando el ID
+                calcularEstadisticas();         // Actualizamos suma, media, etc.
+            });
+
+            // Adjuntamos a la tabla y mostramos
+            $("#cuerpoTabla").append($nuevaFila);
+            $("#tablaDatos").show();
+
+            // RETO: Mostrar estadísticas de edades
+            calcularEstadisticas();
+
+            // Limpieza
+            $(".formulario input").val("");
+            $("#inputNombre").focus();
+        });
+
+    });
+</script>
+
+</body>
+</html>

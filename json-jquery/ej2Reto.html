@@ -36,20 +36,18 @@
     </div>
 </div>
 <br>
-
-<table id="tablaDatos" style="display: none;" border="1">
-    <thead>
-    <tr>
-        <th>Nombre</th>
-        <th>Apellidos</th>
-        <th>Edad</th>
-        <th>Ciudad</th>
-    </tr>
-    </thead>
-    <tbody id="cuerpoTabla">
-    </tbody>
-</table>
-
+        <table id="tablaDatos" style="display: none;" border="1">
+            <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Apellidos</th>
+                <th>Edad</th>
+                <th>Ciudad</th>
+            </tr>
+            </thead>
+            <tbody id="cuerpoTabla">
+            </tbody>
+        </table>
 <script>
     // Variable global para asignar IDs únicos a cada fila
     let contadorFilas = 0;
@@ -102,7 +100,6 @@
         // Pintamos los resultados
         $("#txtSuma").text("Suma = " + suma);
         $("#txtMaximo").text("Máximo = " + maximo);
-        // Usamos toFixed(2) por si la media tiene muchos decimales
         $("#txtMedia").text("Media = " + media.toFixed(2));
         $("#txtMinimo").text("Mínimo = " + minimo);
 
@@ -114,7 +111,7 @@
 
         $("#btnGuardar").on("click", function() {
 
-            // RETO: Comprobar que TODOS los campos estén rellenos
+            // Comprobar que TODOS los campos estén rellenos
             const camposAValidar = [
                 { id: "#inputNombre", nombre: "nombre" },
                 { id: "#inputApellidos", nombre: "apellidos" },
@@ -125,9 +122,9 @@
             for (let i = 0; i < camposAValidar.length; i++) {
                 let valor = $(camposAValidar[i].id).val();
                 if ($.trim(valor) === "") {
-                    // Muestra la alerta indicando exactamente qué campo falla
+                    // Muestra la alerta
                     alert("El campo " + camposAValidar[i].nombre + " es obligatorio.");
-                    return; // Detiene la ejecución si falta algo
+                    return;
                 }
             }
 
@@ -140,23 +137,23 @@
 
             const $nuevaFila = crearFila(datosUsuario);
 
-            // RETO: Añadir ID al TR y función onclick para eliminarlo
+            // Añadir ID al TR y función onclick para eliminarlo
             contadorFilas++;
             const idFila = "fila-" + contadorFilas;
             $nuevaFila.attr("id", idFila);
 
-            // Al hacer clic en la fila, se elimina usando su ID y recalculamos
+
             $nuevaFila.on("click", function() {
                 let idDeEstaFila = $(this).attr("id");
-                $("#" + idDeEstaFila).remove(); // Elimina el TR con remove usando el ID
-                calcularEstadisticas();         // Actualizamos suma, media, etc.
+                $("#" + idDeEstaFila).remove();
+                calcularEstadisticas();
             });
 
-            // Adjuntamos a la tabla y mostramos
+
             $("#cuerpoTabla").append($nuevaFila);
             $("#tablaDatos").show();
 
-            // RETO: Mostrar estadísticas de edades
+            // Muestra estadisticas actualizadas
             calcularEstadisticas();
 
             // Limpieza

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Ejercicio 2: MEGARETO</title>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+<h2>Ejercicio 2: MEGARETO</h2>
+
+<div class="formulario">
+  <label for="inputNombre">Nombre:</label>
+  <input type="text" id="inputNombre" placeholder="Ej: Éver"><br>
+
+  <label for="inputApellidos">Apellidos:</label>
+  <input type="text" id="inputApellidos" placeholder="Ej: Banega"><br>
+
+  <label for="inputEdad">Edad:</label>
+  <input type="number" id="inputEdad"><br>
+
+  <label for="inputCiudad">Ciudad:</label>
+  <input type="text" id="inputCiudad" placeholder="Ej: Rosario"><br><br>
+
+  <button id="btnGuardar">Guardar y mostrar</button>
+</div>
+
+<div id="estadisticas" style="display: none;">
+  <div class="fila-estadistica">
+    <span id="txtSuma">Suma = 0</span>
+    <span id="txtMaximo">Máximo = 0</span>
+  </div>
+  <div class="fila-estadistica">
+    <span id="txtMedia">Media = 0</span>
+    <span id="txtMinimo">Mínimo = 0</span>
+  </div>
+</div>
+<br>
+<table id="tablaDatos" style="display: none;" border="1">
+  <thead>
+  <tr>
+    <th>Nombre</th>
+    <th>Apellidos</th>
+    <th>Edad</th>
+    <th>Ciudad</th>
+  </tr>
+  </thead>
+  <tbody id="cuerpoTabla">
+  </tbody>
+</table>
+
+<script>
+  // Array vacio
+  let datosArray = [];
+
+
+  function generaTR(datos){
+    const $fila = $("<tr>");
+    $fila.append( $("<td>").text(datos.nombre) )
+            .append( $("<td>").text(datos.apellidos) )
+            .append( $("<td>").text(datos.edad) )
+            .append( $("<td>").text(datos.ciudad) );
+    return $fila;
+  }
+
+  function generaTabla(listaDatos) {
+    // Se elimina el contenido actual de la tabla antes de crearla
+    $("#cuerpoTabla").empty();
+
+    // Por cada elemento del objeto recuperado (forEach)
+    listaDatos.forEach(function(dato, index) {
+
+      // Se genera un TR con la función generaTR
+      let $nuevaFila = generaTR(dato);
+
+      // Al eliminar, borrar del ARRAY usando splice y el índice
+      $nuevaFila.on("click", function() {
+        // Borramos 1 elemento en la posición 'index'
+        datosArray.splice(index, 1);
+
+        // Regeneramos la tabla con el array actualizado
+        generaTabla(datosArray);
+
+        // Recalculamos las estadísticas
+        calcularEstadisticas();
+      });
+
+      // Añadimos la fila al cuerpo de la tabla
+      $("#cuerpoTabla").append($nuevaFila);
+    });
+
+    // Ocultar la tabla si nos quedamos sin elementos
+    if (listaDatos.length === 0) {
+      $("#tablaDatos").hide();
+    } else {
+      $("#tablaDatos").show();
+    }
+  }
+
+  function calcularEstadisticas() {
+    if (datosArray.length === 0) {
+      $("#estadisticas").hide();
+      return;
+    }
+
+    let suma = 0;
+
+    let maximo = parseInt(datosArray[0].edad);
+    let minimo = parseInt(datosArray[0].edad);
+
+    datosArray.forEach(function(dato) {
+      let edad = parseInt(dato.edad);
+      suma += edad;
+      if (edad > maximo) maximo = edad;
+      if (edad < minimo) minimo = edad;
+    });
+
+    let media = suma / datosArray.length;
+
+    $("#txtSuma").text("Suma = " + suma);
+    $("#txtMaximo").text("Máximo = " + maximo);
+    $("#txtMedia").text("Media = " + media.toFixed(2));
+    $("#txtMinimo").text("Mínimo = " + minimo);
+
+    // Mostramos el div de estadísticas
+    $("#estadisticas").show();
+
+  }
+
+  $(document).ready(function() {
+
+    $("#btnGuardar").on("click", function() {
+
+      // Comprobamos que todos los datos esten rellenos
+      const validar = [
+        { id: "#inputNombre", nombre: "Nombre"},
+        { id: "#inputApellidos", nombre: "Apellidos"},
+        { id: "#inputEdad", nombre: "Edad"},
+        { id: "#inputCiudad", nombre: "Ciudad"},
+      ];
+
+      for (let i = 0; i < validar.length; i++) {
+        let valor = $(validar[i].id).val();
+        if ($.trim(valor) === "") {
+          alert("El campo " + validar[i].nombre + " es obligatorio.");
+          return;
+        }
+      }
+
+      // Crear el objeto con los datos del formulario
+      const datosUsuario = {
+        nombre: $("#inputNombre").val(),
+        apellidos: $("#inputApellidos").val(),
+        edad: $("#inputEdad").val(),
+        ciudad: $("#inputCiudad").val()
+      };
+
+      datosArray.push(datosUsuario);
+
+      generaTabla(datosArray);
+
+      calcularEstadisticas();
+
+      // Limpieza
+      $(".formulario input").val("");
+      $("#inputNombre").focus();
+
+
+    });
+  });
+
+</script>
+
+</body>
+</html>

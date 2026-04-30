@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ejercicio 4: Envío y recepción</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+</head>
+<body>
+<h2>Ejercicio 4: Envío y recepción</h2>
+
+    <div class="formulario">
+    <fieldset>
+        <legend>Datos Usuario</legend>
+        <label for="inputNombre">Nombre:</label>
+        <input type="text" id="inputNombre" placeholder="Ej: Éver">
+
+        <label for="inputApellidos">Apellidos:</label>
+        <input type="text" id="inputApellidos" placeholder="Ej: Banega">
+
+        <label for="inputEdad">Edad:</label>
+        <input type="number" id="inputEdad">
+
+        <label for="inputCiudad">Ciudad:</label>
+        <input type="text" id="inputCiudad" placeholder="Ej: Rosario"><br>
+    </fieldset>
+
+
+    <fieldset class="hobbies-container">
+        <legend>Hobbies</legend>
+        <label><input type="checkbox" name="hobbies[]" value="Deporte"> Deporte</label>
+        <label><input type="checkbox" name="hobbies[]" value="Lectura"> Lectura</label>
+        <label><input type="checkbox" name="hobbies[]" value="Música"> Música</label>
+        <label><input type="checkbox" name="hobbies[]" value="Juegos"> Juegos</label>
+        <label><input type="checkbox" name="hobbies[]" value="Cine"> Cine</label>
+        <label><input type="checkbox" name="hobbies[]" value="Teatro"> Teatro</label>
+        <label><input type="checkbox" name="hobbies[]" value="Coleccionismo"> Coleccionismo</label>
+        <label><input type="checkbox" name="hobbies[]" value="Bricolaje"> Bricolaje</label>
+        <label><input type="checkbox" name="hobbies[]" value="Cosplay"> Cosplay</label>
+        <label><input type="checkbox" name="hobbies[]" value="Padel"> Padel</label>
+        <label><input type="checkbox" name="hobbies[]" value="Gym"> Gym</label>
+    </fieldset>
+
+    <br>
+
+    <button id="btnGuardar">Pulsa para insertar</button>
+</div>
+
+<br>
+
+<div id="estadisticas">
+    <div class="fila-estadistica">
+        <span id="suma">Suma = 0</span> |
+        <span id="max">Máximo = 0</span>
+    </div>
+    <div class="fila-estadistica">
+        <span id="media">Media = 0</span> |
+        <span id="min">Mínimo = 0</span>
+    </div>
+</div>
+<br>
+
+<table id="tablaDatos" border="1">
+    <thead>
+    <tr>
+        <th>Nombre</th>
+        <th>Apellidos</th>
+        <th>Edad</th>
+        <th>Ciudad</th>
+        <th>Hobbies</th>
+    </tr>
+    </thead>
+    <tbody id="cuerpoTabla">
+    </tbody>
+</table>
+
+<script>
+    let datosArray = [];
+
+    function generaTR(datos){
+        const $fila = $("<tr>");
+        const $celdaHobbies = $("<td>");
+
+        if (datos.hobbies && datos.hobbies.length > 0) {
+            const $listaUL = $("<ul>").addClass("lista-hobbies-tabla");
+            datos.hobbies.forEach(function(hobby) {
+                $listaUL.append( $("<li>").text(hobby) );
+            });
+            $celdaHobbies.append($listaUL);
+        } else {
+            $celdaHobbies.text("-");
+        }
+
+        $fila.append( $("<td>").text(datos.nombre) )
+            .append( $("<td>").text(datos.apellidos) )
+            .append( $("<td>").text(datos.edad) )
+            .append( $("<td>").text(datos.ciudad) )
+            .append( $celdaHobbies );
+
+        return $fila;
+    }
+
+    function generaTabla(listaDatos) {
+        $("#cuerpoTabla").empty();
+
+        listaDatos.forEach(function(dato, index) {
+            let $nuevaFila = generaTR(dato);
+
+            $nuevaFila.on("click", function() {
+                datosArray.splice(index, 1);
+                generaTabla(datosArray);
+                envio(datosArray);
+            });
+
+            $("#cuerpoTabla").append($nuevaFila);
+        });
+
+        if (listaDatos.length === 0) {
+            $("#tablaDatos").hide();
+        } else {
+            $("#tablaDatos").show();
+        }
+    }
+
+    function envio(objeto_js) {
+        if (objeto_js.length === 0) {
+            $("#estadisticas").hide();
+            return;
+        }
+
+        $.ajax({
+            url: "https://lm.iesnervion.es/eco.php",
+            method: "POST",
+            data: JSON.stringify(objeto_js),
+            contentType: "application/json",
+            dataType: "json"
+        }).done(function(response) {
+            console.log("Respuesta del servidor:", response);
+
+
+            let suma = response.calculos.suma || 0;
+            let max = response.calculos.max || 0;
+            let media = response.calculos.media || 0;
+            let min = response.calculos.min || 0;
+
+            $("#suma").text("Suma = " + suma);
+            $("#max").text("Máximo = " + max);
+            $("#media").text("Media = " + (typeof media === 'number' ? media.toFixed(2) : media));
+            $("#min").text("Mínimo = " + min);
+
+            $("#estadisticas").show();
+
+        }).fail(function(error) {
+            console.error("Error en la petición:", error);
+        });
+    }
+
+    $(document).ready(function() {
+        $("#btnGuardar").on("click", function() {
+            const validar = [
+                { id: "#inputNombre", nombre: "Nombre"},
+                { id: "#inputApellidos", nombre: "Apellidos"},
+                { id: "#inputEdad", nombre: "Edad"},
+                { id: "#inputCiudad", nombre: "Ciudad"},
+            ];
+
+            for (let i = 0; i < validar.length; i++) {
+                let valor = $(validar[i].id).val();
+                if ($.trim(valor) === "") {
+                    alert("El campo " + validar[i].nombre + " es obligatorio.");
+                    return;
+                }
+            }
+
+            const hobbiesSeleccionados = $('input[name="hobbies[]"]')
+                .filter(':checked')
+                .map(function () {
+                    return $(this).val();
+                })
+                .get();
+
+            const datosUsuario = {
+                nombre: $("#inputNombre").val(),
+                apellidos: $("#inputApellidos").val(),
+                edad: Number($("#inputEdad").val()),
+                ciudad: $("#inputCiudad").val(),
+                hobbies: hobbiesSeleccionados
+            };
+
+            datosArray.push(datosUsuario);
+
+            generaTabla(datosArray);
+            envio(datosArray);
+
+            $(".formulario input[type='text'], .formulario input[type='number']").val("");
+            $('input[name="hobbies[]"]').prop('checked', false);
+            $("#inputNombre").focus();
+        });
+    });
+</script>
+</body>
+</html>

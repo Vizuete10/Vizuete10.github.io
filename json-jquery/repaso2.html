@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Repaso 2 - Completo</title>
+    <style>
+        table { width: 100%; margin-top: 20px; border-collapse: collapse; }
+        th, td { padding: 10px; text-align: left; }
+    </style>
+</head>
+<body>
+
+<h1>Repaso 2: Formulario a Tabla</h1>
+
+<div class="formulario">
+    <label>Nombre:</label>
+    <input type="text" id="nombre">
+    <label>Apellidos:</label>
+    <input type="text" id="apellidos">
+    <label>Edad:</label>
+    <input type="number" id="edad">
+    <label>Ciudad:</label>
+    <input type="text" id="ciudad">
+    <input type="button" value="Insertar" id="insertar">
+</div>
+
+<br>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Nombre</th>
+        <th>Apellidos</th>
+        <th>Edad</th>
+        <th>Ciudad</th>
+    </tr>
+    </thead>
+    <tbody id="nuevaFila">
+    <!-- Las filas aparecerán aquí -->
+    </tbody>
+</table>
+
+<script>
+    // 1. Escuchamos el clic en el botón
+    document.getElementById("insertar").addEventListener("click", function() {
+
+        // 2. Capturamos los valores de los inputs
+        // Usamos .value para obtener el texto y Number() para la edad
+        let nombreVal = document.getElementById("nombre").value;
+        let apellidosVal = document.getElementById("apellidos").value;
+        let edadVal = document.getElementById("edad").value;
+        let ciudadVal = document.getElementById("ciudad").value;
+
+        // 3. Creamos el objeto JavaScript
+        let persona = {
+            nombre: nombreVal,
+            apellidos: apellidosVal,
+            edad: edadVal,
+            ciudad: ciudadVal
+        };
+
+        // 4. Simulamos el proceso JSON (Serializar y Deserializar)
+        // Esto es lo que el profesor pide para demostrar que sabes usar JSON
+        let jsonEnviado = JSON.stringify(persona); // De objeto a texto
+        let objetoRecuperado = JSON.parse(jsonEnviado); // De texto a objeto
+
+        // 5. Llamamos a la función para generar la fila e inyectarla en el HTML
+        let nuevaFila = generaTr(objetoRecuperado);
+        document.getElementById("nuevaFila").innerHTML += nuevaFila; // Añadimos al final
+
+        // Opcional: Limpiar los campos después de insertar
+        document.getElementById("nombre").value = "";
+        document.getElementById("apellidos").value = "";
+        document.getElementById("edad").value = "";
+        document.getElementById("ciudad").value = "";
+    });
+
+    // Función que fabrica el HTML de la fil
+    function generaTr(objeto) {
+        return "<tr>" +
+            "<td>" + objeto.nombre + "</td>" +
+            "<td>" + objeto.apellidos + "</td>" +
+            "<td>" + objeto.edad + "</td>" +
+            "<td>" + objeto.ciudad + "</td>" +
+            "</tr>";
+    }
+</script>
+
+</body>
+</html>

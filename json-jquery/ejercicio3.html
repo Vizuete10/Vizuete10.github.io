@@ -2,205 +2,144 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Ejercicio 3: Listas</title>
+    <title>EJ3 - Hobbies</title>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <style>
+        table, th, td { border: 1px solid #333; border-collapse: collapse; padding: 6px; }
+        fieldset { margin: 10px 0; padding: 8px; }
+        tr:hover { background-color: #ffd0d0; cursor: pointer; }
+        input[type="text"], input[type="number"] { margin: 4px; }
+    </style>
 </head>
 <body>
-<h2>Ejercicio 3: Listas</h2>
+<h2>EJ3: Listas (Hobbies)</h2>
 
-<div class="formulario">
-    <label for="inputNombre">Nombre:</label>
-    <input type="text" id="inputNombre" placeholder="Ej: Éver">
+<input type="text"   id="nombre"    placeholder="Nombre">
+<input type="text"   id="apellidos" placeholder="Apellidos">
+<input type="number" id="edad"      placeholder="Edad">
+<input type="text"   id="ciudad"    placeholder="Ciudad">
 
-    <label for="inputApellidos">Apellidos:</label>
-    <input type="text" id="inputApellidos" placeholder="Ej: Banega">
+<!-- fieldset agrupa visualmente los checkboxes -->
+<!-- Todos tienen name="hobbies[]" para poder seleccionarlos juntos con jQuery -->
+<fieldset>
+    <legend>Hobbies</legend>
+    <label><input type="checkbox" name="hobbies[]" value="Deporte">       Deporte</label>
+    <label><input type="checkbox" name="hobbies[]" value="Lectura">       Lectura</label>
+    <label><input type="checkbox" name="hobbies[]" value="Música">        Música</label>
+    <label><input type="checkbox" name="hobbies[]" value="Juegos">        Juegos</label>
+    <label><input type="checkbox" name="hobbies[]" value="Cine">          Cine</label>
+    <label><input type="checkbox" name="hobbies[]" value="Teatro">        Teatro</label>
+    <label><input type="checkbox" name="hobbies[]" value="Coleccionismo"> Coleccionismo</label>
+    <label><input type="checkbox" name="hobbies[]" value="Bricolaje">     Bricolaje</label>
+    <label><input type="checkbox" name="hobbies[]" value="Cosplay">       Cosplay</label>
+</fieldset>
 
-    <label for="inputEdad">Edad:</label>
-    <input type="number" id="inputEdad">
+<button type="button" onclick="principal()">Pulsa para insertar</button>
 
-    <label for="inputCiudad">Ciudad:</label>
-    <input type="text" id="inputCiudad" placeholder="Ej: Rosario"><br>
-
-<br>
-
-    <fieldset class="hobbies-container">
-        <legend>Hobbies</legend>
-        <label><input type="checkbox" name="hobbies[]" value="Deporte"> Deporte</label>
-        <label><input type="checkbox" name="hobbies[]" value="Lectura"> Lectura</label>
-        <label><input type="checkbox" name="hobbies[]" value="Música"> Música</label>
-        <label><input type="checkbox" name="hobbies[]" value="Juegos"> Juegos</label>
-        <label><input type="checkbox" name="hobbies[]" value="Cine"> Cine</label>
-        <label><input type="checkbox" name="hobbies[]" value="Teatro"> Teatro</label>
-        <label><input type="checkbox" name="hobbies[]" value="Coleccionismo"> Coleccionismo</label>
-        <label><input type="checkbox" name="hobbies[]" value="Bricolaje"> Bricolaje</label>
-        <label><input type="checkbox" name="hobbies[]" value="Cosplay"> Cosplay</label>
-        <label><input type="checkbox" name="hobbies[]" value="Padel"> Padel</label>
-        <label><input type="checkbox" name="hobbies[]" value="Gym"> Gym</label>
-    </fieldset>
-
-<br>
-
-    <button id="btnGuardar">Pulsa para insertar</button>
-</div>
-
-<br>
-
-<div id="estadisticas" style="display: none;">
-    <div class="fila-estadistica">
-        <span id="txtSuma">Suma = 0</span> |
-        <span id="txtMaximo">Máximo = 0</span>
-    </div>
-    <div class="fila-estadistica">
-        <span id="txtMedia">Media = 0</span> |
-        <span id="txtMinimo">Mínimo = 0</span>
-    </div>
-</div>
-<br>
-
-<table id="tablaDatos" style="display: none;" border="1">
+<table>
     <thead>
     <tr>
-        <th>Nombre</th>
-        <th>Apellidos</th>
-        <th>Edad</th>
-        <th>Ciudad</th>
-        <th>Hobbies</th>
+        <th>Nombre</th><th>Apellidos</th><th>Edad</th>
+        <th>Ciudad</th><th>Hobbies</th>
     </tr>
     </thead>
-    <tbody id="cuerpoTabla">
-    </tbody>
+    <tbody id="tbody"></tbody>
 </table>
 
 <script>
-    let datosArray = [];
+    let listaPersonas = [];
+    let contadorId    = 0;
 
-    function generaTR(datos){
-        const $fila = $("<tr>");
+    // ============================================================
+    // EJ3 RETO: Limitar a máximo 3 checkboxes
+    // Este bloque se ejecuta al cargar la página y "escucha" cambios
+    // ============================================================
+    $('input:checkbox').on('change', function() {
+        // .filter(':checked') selecciona solo los marcados
+        // .length cuenta cuántos hay
+        const marcados = $('input:checkbox').filter(':checked').length;
 
-        // Creamos la celda TD para los hobbies
-        const $celdaHobbies = $("<td>");
-
-        // Comprobamos si el usuario seleccionó algún hobby
-        if (datos.hobbies && datos.hobbies.length > 0) {
-            // Creamos una lista no ordenada (UL)
-            const $listaUL = $("<ul>").addClass("lista-hobbies-tabla");
-
-            // Por cada hobby, creamos un (LI) y lo metemos en el (UL)
-            datos.hobbies.forEach(function(hobby) {
-                $listaUL.append( $("<li>").text(hobby) );
-            });
-
-            // Añadimos la lista completa a la celda
-            $celdaHobbies.append($listaUL);
+        if (marcados >= 3) {
+            // Si ya hay 3 marcados, deshabilita los que NO están marcados
+            // .not(':checked') selecciona los desmarcados
+            // .prop('disabled', true) los bloquea → el usuario no puede marcarlos
+            $('input:checkbox').not(':checked').prop('disabled', true);
         } else {
-            // Si no marcó nada, ponemos un texto por defecto
-            $celdaHobbies.text("-");
+            // Si hay menos de 3, habilita todos de nuevo (por si alguien desmarcó)
+            $('input:checkbox').prop('disabled', false);
         }
+    });
+    // ============================================================
 
-        // Construimos la fila entera
-        $fila.append( $("<td>").text(datos.nombre) )
-            .append( $("<td>").text(datos.apellidos) )
-            .append( $("<td>").text(datos.edad) )
-            .append( $("<td>").text(datos.ciudad) )
-            .append( $celdaHobbies ); // Añadimos la celda de la lista al final
+    function serializar(obj)  { return JSON.stringify(obj); }
+    function deserializar(str){ return JSON.parse(str); }
 
-        return $fila;
-    }
-
-    function generaTabla(listaDatos) {
-        $("#cuerpoTabla").empty();
-
-        listaDatos.forEach(function(dato, index) {
-            let $nuevaFila = generaTR(dato);
-
-            $nuevaFila.on("click", function() {
-                datosArray.splice(index, 1);
-                generaTabla(datosArray);
-                calcularEstadisticas();
-            });
-
-            $("#cuerpoTabla").append($nuevaFila);
-        });
-
-        if (listaDatos.length === 0) {
-            $("#tablaDatos").hide();
-        } else {
-            $("#tablaDatos").show();
-        }
-    }
-
-    function calcularEstadisticas() {
-        if (datosArray.length === 0) {
-            $("#estadisticas").hide();
+    function principal() {
+        if (!$("#nombre").val() || !$("#apellidos").val() ||
+            !$("#edad").val()   || !$("#ciudad").val()) {
+            alert("Todos los campos son obligatorios");
             return;
         }
 
-        let suma = 0;
-        let maximo = parseInt(datosArray[0].edad);
-        let minimo = parseInt(datosArray[0].edad);
+        // --- LECTURA DE CHECKBOXES MARCADOS ---
+        // $('input[name="hobbies[]"]') → todos los checkboxes con ese name
+        // .filter(':checked')          → solo los que están marcados
+        // .map(function(){ return $(this).val(); }) → extrae el value de cada uno
+        // .get()                       → convierte el objeto jQuery en Array JS nativo
+        const hobbies = $('input[name="hobbies[]"]')
+            .filter(':checked')
+            .map(function() { return $(this).val(); })
+            .get();
 
-        datosArray.forEach(function(dato) {
-            let edad = parseInt(dato.edad);
-            suma += edad;
-            if (edad > maximo) maximo = edad;
-            if (edad < minimo) minimo = edad;
-        });
+        contadorId++;
+        const objJson = {
+            id:        contadorId,
+            nombre:    $("#nombre").val(),
+            apellidos: $("#apellidos").val(),
+            edad:      parseInt($("#edad").val()),
+            ciudad:    $("#ciudad").val(),
+            hobbies:   hobbies  // Array de strings: ["Deporte", "Cine"]
+        };
 
-        let media = suma / datosArray.length;
+        const obj_recuperado = deserializar(serializar(objJson));
+        listaPersonas.push(obj_recuperado);
+        generaTabla(listaPersonas);
 
-        $("#txtSuma").text("Suma = " + suma);
-        $("#txtMaximo").text("Máximo = " + maximo);
-        $("#txtMedia").text("Media = " + media.toFixed(2));
-        $("#txtMinimo").text("Mínimo = " + minimo);
-
-        $("#estadisticas").show();
+        // Limpiar campos y desmarcar checkboxes
+        $("#nombre, #apellidos, #edad, #ciudad").val("");
+        // .prop('checked', false) desmarca todos los checkboxes
+        // .prop('disabled', false) los rehabilita (por si estaban bloqueados)
+        $('input[name="hobbies[]"]').prop('checked', false).prop('disabled', false);
     }
 
-    $(document).ready(function() {
-        $("#btnGuardar").on("click", function() {
-            const validar = [
-                { id: "#inputNombre", nombre: "Nombre"},
-                { id: "#inputApellidos", nombre: "Apellidos"},
-                { id: "#inputEdad", nombre: "Edad"},
-                { id: "#inputCiudad", nombre: "Ciudad"},
-            ];
-
-            for (let i = 0; i < validar.length; i++) {
-                let valor = $(validar[i].id).val();
-                if ($.trim(valor) === "") {
-                    alert("El campo " + validar[i].nombre + " es obligatorio.");
-                    return;
-                }
-            }
-
-            // Recuperamos los hobbies seleccionados
-            const hobbiesSeleccionados = $('input[name="hobbies[]"]')
-                .filter(':checked')
-                .map(function () {
-                    return $(this).val();
-                })
-                .get();
-
-            const datosUsuario = {
-                nombre: $("#inputNombre").val(),
-                apellidos: $("#inputApellidos").val(),
-                edad: $("#inputEdad").val(),
-                ciudad: $("#inputCiudad").val(),
-                hobbies: hobbiesSeleccionados
-            };
-
-            datosArray.push(datosUsuario);
-
-            generaTabla(datosArray);
-            calcularEstadisticas();
-
-            // Limpieza
-            $(".formulario input[type='text'], .formulario input[type='number']").val("");
-            $('input[name="hobbies[]"]').prop('checked', false);
-            $("#inputNombre").focus();
+    function generaTabla(lista) {
+        $("#tbody").html("");
+        lista.forEach(function(obj, indice) {
+            $("#tbody").append(generaTr(obj, indice));
         });
-    });
-</script>
+    }
 
+    function generaTr(obj, indice) {
+        // .join('<br>') une el array de hobbies con saltos de línea HTML
+        // Si no hay hobbies, muestra "—"
+        const hobbiesHtml = obj.hobbies.length > 0
+            ? obj.hobbies.join('<br>')
+            : '—';
+
+        return `<tr id="fila-${obj.id}" data-indice="${indice}" onclick="eliminarFila(this)">
+                <td>${obj.nombre}</td>
+                <td>${obj.apellidos}</td>
+                <td>${obj.edad}</td>
+                <td>${obj.ciudad}</td>
+                <td>${hobbiesHtml}</td>
+            </tr>`;
+    }
+
+    function eliminarFila(tr) {
+        const indice = parseInt($(tr).attr("data-indice"));
+        listaPersonas.splice(indice, 1);
+        generaTabla(listaPersonas);
+    }
+</script>
 </body>
 </html>

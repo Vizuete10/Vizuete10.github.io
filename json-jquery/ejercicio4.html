@@ -2,201 +2,155 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Ejercicio 4: Envío y recepción</title>
+    <title>EJ4 - RETO y MEGARETO</title>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-
+    <style>
+        table, th, td { border: 1px solid #333; border-collapse: collapse; padding: 6px; }
+        fieldset { margin: 8px 0; }
+        tr:hover { background-color: #ffd0d0; cursor: pointer; }
+        #mensajeError { font-weight: bold; }
+    </style>
 </head>
 <body>
-<h2>Ejercicio 4: Envío y recepción</h2>
+<h2>EJ4 RETO: Tabla de Productos con reto4.php</h2>
 
-    <div class="formulario">
-    <fieldset>
-        <legend>Datos Usuario</legend>
-        <label for="inputNombre">Nombre:</label>
-        <input type="text" id="inputNombre" placeholder="Ej: Éver">
+<!-- Campos que necesita la BD: descripcion, idProveedor, precio (no el id, es AUTO_INCREMENT) -->
+<input type="text"   id="descripcion"  placeholder="Descripción">
+<input type="number" id="idProveedor"  placeholder="ID Proveedor">
+<input type="number" id="precio"       placeholder="Precio" step="0.01">
+<button type="button" onclick="enviarProducto()">Insertar Producto</button>
 
-        <label for="inputApellidos">Apellidos:</label>
-        <input type="text" id="inputApellidos" placeholder="Ej: Banega">
+<!-- El error se muestra aquí en rojo; en verde si se elimina correctamente (MEGARETO) -->
+<h2 id="mensajeError"></h2>
 
-        <label for="inputEdad">Edad:</label>
-        <input type="number" id="inputEdad">
-
-        <label for="inputCiudad">Ciudad:</label>
-        <input type="text" id="inputCiudad" placeholder="Ej: Rosario"><br>
-    </fieldset>
-
-
-    <fieldset class="hobbies-container">
-        <legend>Hobbies</legend>
-        <label><input type="checkbox" name="hobbies[]" value="Deporte"> Deporte</label>
-        <label><input type="checkbox" name="hobbies[]" value="Lectura"> Lectura</label>
-        <label><input type="checkbox" name="hobbies[]" value="Música"> Música</label>
-        <label><input type="checkbox" name="hobbies[]" value="Juegos"> Juegos</label>
-        <label><input type="checkbox" name="hobbies[]" value="Cine"> Cine</label>
-        <label><input type="checkbox" name="hobbies[]" value="Teatro"> Teatro</label>
-        <label><input type="checkbox" name="hobbies[]" value="Coleccionismo"> Coleccionismo</label>
-        <label><input type="checkbox" name="hobbies[]" value="Bricolaje"> Bricolaje</label>
-        <label><input type="checkbox" name="hobbies[]" value="Cosplay"> Cosplay</label>
-        <label><input type="checkbox" name="hobbies[]" value="Padel"> Padel</label>
-        <label><input type="checkbox" name="hobbies[]" value="Gym"> Gym</label>
-    </fieldset>
-
-    <br>
-
-    <button id="btnGuardar">Pulsa para insertar</button>
-</div>
-
-<br>
-
-<div id="estadisticas">
-    <div class="fila-estadistica">
-        <span id="suma">Suma = 0</span> |
-        <span id="max">Máximo = 0</span>
-    </div>
-    <div class="fila-estadistica">
-        <span id="media">Media = 0</span> |
-        <span id="min">Mínimo = 0</span>
-    </div>
-</div>
-<br>
-
-<table id="tablaDatos" border="1">
+<table>
     <thead>
-    <tr>
-        <th>Nombre</th>
-        <th>Apellidos</th>
-        <th>Edad</th>
-        <th>Ciudad</th>
-        <th>Hobbies</th>
-    </tr>
+    <tr><th>ID</th><th>Descripción</th><th>ID Proveedor</th><th>Precio</th></tr>
     </thead>
-    <tbody id="cuerpoTabla">
-    </tbody>
+    <tbody id="tbody"></tbody>
 </table>
 
 <script>
-    let datosArray = [];
+    // ─── EJ4 BASE: eco.php ─────────────────────────────────────────────
+    // Este bloque sería para ej4.html (eco.php devuelve el array + cálculos)
+    // Aquí lo sustituimos por reto4.php para el RETO
+    // ───────────────────────────────────────────────────────────────────
 
-    function generaTR(datos){
-        const $fila = $("<tr>");
-        const $celdaHobbies = $("<td>");
-
-        if (datos.hobbies && datos.hobbies.length > 0) {
-            const $listaUL = $("<ul>").addClass("lista-hobbies-tabla");
-            datos.hobbies.forEach(function(hobby) {
-                $listaUL.append( $("<li>").text(hobby) );
-            });
-            $celdaHobbies.append($listaUL);
-        } else {
-            $celdaHobbies.text("-");
-        }
-
-        $fila.append( $("<td>").text(datos.nombre) )
-            .append( $("<td>").text(datos.apellidos) )
-            .append( $("<td>").text(datos.edad) )
-            .append( $("<td>").text(datos.ciudad) )
-            .append( $celdaHobbies );
-
-        return $fila;
-    }
-
-    function generaTabla(listaDatos) {
-        $("#cuerpoTabla").empty();
-
-        listaDatos.forEach(function(dato, index) {
-            let $nuevaFila = generaTR(dato);
-
-            $nuevaFila.on("click", function() {
-                datosArray.splice(index, 1);
-                generaTabla(datosArray);
-                envio(datosArray);
-            });
-
-            $("#cuerpoTabla").append($nuevaFila);
-        });
-
-        if (listaDatos.length === 0) {
-            $("#tablaDatos").hide();
-        } else {
-            $("#tablaDatos").show();
-        }
-    }
-
-    function envio(objeto_js) {
-        if (objeto_js.length === 0) {
-            $("#estadisticas").hide();
+    function enviarProducto() {
+        // Validación
+        if (!$("#descripcion").val() || !$("#idProveedor").val() || !$("#precio").val()) {
+            alert("Todos los campos son obligatorios");
             return;
         }
 
+        // Objeto con los campos que espera la tabla tProductos
+        // NO incluimos 'id' porque es AUTO_INCREMENT (lo genera la BD)
+        const producto = {
+            descripcion: $("#descripcion").val(),
+            idProveedor: parseInt($("#idProveedor").val()),
+            precio:      parseFloat($("#precio").val())
+        };
+
+        // ─── ENVÍO CON $.ajax() ──────────────────────────────────────────
         $.ajax({
-            url: "https://lm.iesnervion.es/eco.php",
-            method: "POST",
-            data: JSON.stringify(objeto_js),
+            url:         "https://lm.iesnervion.es/reto4.php",
+            method:      "POST",
+            // data: lo que enviamos al servidor, serializado
+            data:        JSON.stringify(producto),
+            // contentType: le avisamos al servidor de que enviamos JSON
             contentType: "application/json",
-            dataType: "json"
-        }).done(function(response) {
-            console.log("Respuesta del servidor:", response);
+            // dataType: jQuery parseará la respuesta como JSON automáticamente
+            dataType:    "json"
+        })
+            .done(function(respuesta) {
+                // respuesta ya es un objeto JS (jQuery lo parseó por dataType:"json")
+                console.log("Respuesta:", respuesta);
 
+                // El servidor devuelve { lista: [...], error: null o "mensaje" }
+                // Si error es null → todo OK; si no → hay un error
+                if (respuesta.error === null) {
+                    // Sin error: limpiamos el mensaje de error
+                    $("#mensajeError").css("color", "red").text("");
+                } else {
+                    // Con error: mostramos en rojo y negrita (ya tiene font-weight en CSS)
+                    $("#mensajeError").css("color", "red").text(respuesta.error);
+                }
 
-            let suma = response.calculos.suma || 0;
-            let max = response.calculos.max || 0;
-            let media = response.calculos.media || 0;
-            let min = response.calculos.min || 0;
+                // Mostramos la lista devuelta por el servidor en la tabla
+                if (respuesta.lista) {
+                    generaTabla(respuesta.lista);
+                }
+            })
+            .fail(function(xhr, status, error) {
+                // Si la petición HTTP falla (red, 404, 500...)
+                console.error("Error HTTP:", xhr.status, error);
+                $("#mensajeError").css("color", "red")
+                    .text("Error de conexión: " + xhr.status + " - " + error);
+            });
 
-            $("#suma").text("Suma = " + suma);
-            $("#max").text("Máximo = " + max);
-            $("#media").text("Media = " + (typeof media === 'number' ? media.toFixed(2) : media));
-            $("#min").text("Mínimo = " + min);
+        // Limpiamos campos (no esperamos a la respuesta)
+        $("#descripcion, #idProveedor, #precio").val("");
+    }
 
-            $("#estadisticas").show();
-
-        }).fail(function(error) {
-            console.error("Error en la petición:", error);
+    function generaTabla(lista) {
+        $("#tbody").html(""); // Vaciamos antes de regenerar
+        lista.forEach(function(producto) {
+            // MEGARETO: el id viene del servidor (AUTO_INCREMENT de la BD)
+            // Lo usamos como id del TR para poder enviarlo al hacer DELETE
+            const fila = `<tr id="fila-${producto.id}"
+                    onclick="eliminarProducto(${producto.id}, this)">
+                    <td>${producto.id}</td>
+                    <td>${producto.descripcion}</td>
+                    <td>${producto.idProveedor}</td>
+                    <td>${parseFloat(producto.precio).toFixed(2)}</td>
+                </tr>`;
+            $("#tbody").append(fila);
         });
     }
 
-    $(document).ready(function() {
-        $("#btnGuardar").on("click", function() {
-            const validar = [
-                { id: "#inputNombre", nombre: "Nombre"},
-                { id: "#inputApellidos", nombre: "Apellidos"},
-                { id: "#inputEdad", nombre: "Edad"},
-                { id: "#inputCiudad", nombre: "Ciudad"},
-            ];
-
-            for (let i = 0; i < validar.length; i++) {
-                let valor = $(validar[i].id).val();
-                if ($.trim(valor) === "") {
-                    alert("El campo " + validar[i].nombre + " es obligatorio.");
-                    return;
+    // ─── EJ4 MEGARETO: DELETE ────────────────────────────────────────
+    function eliminarProducto(id, tr) {
+        $.ajax({
+            // El id va en la URL como parámetro GET: ?id=5
+            url:    "https://lm.iesnervion.es/reto4.php?id=" + id,
+            // Cambiamos POST por DELETE (el servidor lo distingue)
+            method: "DELETE",
+            dataType: "json"
+        })
+            .done(function(respuesta) {
+                console.log("Eliminado:", respuesta);
+                if (!respuesta.error) {
+                    // Eliminamos visualmente el TR del DOM sin recargar la tabla
+                    $(tr).remove();
+                    // Mensaje de éxito en verde dentro del h2
+                    $("#mensajeError").css("color", "green")
+                        .text("Se ha eliminado correctamente");
+                } else {
+                    $("#mensajeError").css("color", "red").text(respuesta.error);
                 }
-            }
+            })
+            .fail(function(xhr, status, error) {
+                $("#mensajeError").css("color", "red")
+                    .text("Error al eliminar: " + xhr.status);
+            });
+    }
 
-            const hobbiesSeleccionados = $('input[name="hobbies[]"]')
-                .filter(':checked')
-                .map(function () {
-                    return $(this).val();
-                })
-                .get();
-
-            const datosUsuario = {
-                nombre: $("#inputNombre").val(),
-                apellidos: $("#inputApellidos").val(),
-                edad: Number($("#inputEdad").val()),
-                ciudad: $("#inputCiudad").val(),
-                hobbies: hobbiesSeleccionados
-            };
-
-            datosArray.push(datosUsuario);
-
-            generaTabla(datosArray);
-            envio(datosArray);
-
-            $(".formulario input[type='text'], .formulario input[type='number']").val("");
-            $('input[name="hobbies[]"]').prop('checked', false);
-            $("#inputNombre").focus();
-        });
-    });
+    // ─── Alternativa para eco.php (EJ4 BASE) ────────────────────────
+    // Aquí se enviaría listaPersonas completa y se reciben cálculos:
+    //
+    // $.ajax({
+    //     url: "https://lm.iesnervion.es/eco.php",
+    //     method: "POST",
+    //     data: JSON.stringify(listaPersonas),
+    //     contentType: "application/json",
+    //     dataType: "json"
+    // }).done(function(respuesta) {
+    //     generaTabla(respuesta.lista);
+    //     $("#estadisticas").text(
+    //         "Suma=" + respuesta.suma + " Media=" + respuesta.media + ...
+    //     );
+    // }).fail(...);
+    // ────────────────────────────────────────────────────────────────
 </script>
 </body>
 </html>

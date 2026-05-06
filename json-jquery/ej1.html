@@ -1,97 +1,67 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Ejercicio 1</title>
+    <title>EJ1 - Serialización</title>
+    <!-- jQuery desde CDN: necesario para usar $ -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </head>
 <body>
-<h2>Ejemplo 1: Consulta de Usuarios</h2>
+<h2>EJ1: Serialización y Deserialización</h2>
 
-<div class="formulario">
-    <label for="inputNombre">Nombre:</label>
-    <input type="text" id="inputNombre" placeholder="Ej: Éver"><br>
+<!-- type="button" es CRÍTICO: sin esto el botón haría submit y recargaría la página -->
+<button type="button" onclick="ejecutar()">Pulsa y observa la consola</button>
 
-    <label for="inputApellidos">Apellidos:</label>
-    <input type="text" id="inputApellidos" placeholder="Ej: Banega"><br>
+<!-- Elementos donde mostraremos el resultado -->
+<p id="serializado"></p>
+<p id="deserializado"></p>
 
-    <label for="inputEdad">Edad:</label>
-    <input type="number" id="inputEdad"><br>
-
-    <label for="inputCiudad">Ciudad:</label>
-    <input type="text" id="inputCiudad" placeholder="Ej: Rosario"><br><br>
-
-    <button onclick="ejecutarEjercicio()">Guardar y mostrar</button>
-</div>
-
-<p id="resultadoJson"></p>
-<p id="resultadoObjeto"></p>
-
-<table id="tablaDatos" style="display: none;" border="1">
-    <thead>
-    <tr>
-    <th>Nombre</th>
-    <th>Apellidos</th>
-    <th>Edad</th>
-    <th>Ciudad</th>
-    </tr>
-    </thead>
-    <thead>
-        <tr>
-    <td id="celdaNombre"></td>
-    <td id="celdaApellidos"></td>
-    <td id="celdaEdad"></td>
-    <td id="celdaCiudad"></td>
-        </tr>
-    </thead>
-    </table>
 <script>
-    // Función, convertir a JSON
-    function convertirAJSON(objeto) {
-        return JSON.stringify(objeto);
+    // Objeto JavaScript original (los datos de partida)
+    let obj = {
+        nombre:    "Álvaro",
+        apellidos: "Vizuete Valle",
+        edad:      18,
+        ciudad:    "Sevilla"
+    };
+
+    // Convierte objeto JS → cadena de texto JSON
+    // Necesario porque la red solo transmite texto
+    function serializar(obj) {
+        return JSON.stringify(obj);
+        // Resultado: '{"nombre":"Álvaro","apellidos":"Vizuete Valle","edad":18,"ciudad":"Sevilla"}'
     }
 
-    // Función, convertir JSON a objeto
-    function convertirAObjeto(cadenaJSON) {
-        return JSON.parse(cadenaJSON);
+    // Convierte cadena JSON → objeto JS
+    // Necesario para acceder a .nombre, .edad, etc.
+    function deserializar(objJson) {
+        return JSON.parse(objJson);
     }
 
-    function ejecutarEjercicio() {
+    function ejecutar() {
+        // PASO 1: Serializar (empaquetar para "enviar")
+        const json_serializado = serializar(obj);
+        console.log(json_serializado);
 
-        const datosUsuario = {
-            nombre: document.getElementById("inputNombre").value,
-            apellidos: document.getElementById("inputApellidos").value,
-            edad: document.getElementById("inputEdad").value,
-            ciudad: document.getElementById("inputCiudad").value,
-        };
+        // .text() en lugar de .html() porque solo inserimos texto plano
+        // .html() interpretaría etiquetas HTML dentro del string → peligroso (XSS)
+        $("#serializado").text(json_serializado);
 
-        // Validar si hay huecos en blanco
-        if(datosUsuario.nombre === "" || datosUsuario.apellidos === "") {
-            alert("Por favor, rellena al menos el nombre y los apellidos.");
-            return;
-        }
+        // PASO 2: Deserializar (desempaquetar lo "recibido")
+        const obj_recuperado = deserializar(json_serializado);
+        console.log(obj_recuperado);
 
-        const stringJSON = convertirAJSON(datosUsuario);
+        // Construimos el texto con concatenación (sin format specifiers)
+        let texto = "Nombre:" + obj_recuperado.nombre;
+        texto += ", Apellidos:" + obj_recuperado.apellidos;
+        texto += ", Edad:"      + obj_recuperado.edad;
+        texto += ", Ciudad:"    + obj_recuperado.ciudad;
 
-        console.log("JSON Serializado: ", stringJSON);
-        document.getElementById("resultadoJson").innerHTML = "<strong>JSON:</strong> " + stringJSON;
+        console.log("Recuperado: " + texto);
 
-        const objetoRecuperado = convertirAObjeto(stringJSON);
-        const textoRecuperado = `<strong>Recuperado:</strong> nombre:${objetoRecuperado.nombre}, apellidos:${objetoRecuperado.apellidos}, edad:${objetoRecuperado.edad}, ciudad:${objetoRecuperado.ciudad}`;
-
-        console.log("Objeto Recuperado:", objetoRecuperado);
-
-        document.getElementById("resultadoObjeto").innerHTML = textoRecuperado;
-
-        // Rellenamos la tabla con el objeto que hemos recuperado del JSON
-        document.getElementById("celdaNombre").innerText = objetoRecuperado.nombre;
-        document.getElementById("celdaApellidos").innerText = objetoRecuperado.apellidos;
-        document.getElementById("celdaEdad").innerText = objetoRecuperado.edad;
-        document.getElementById("celdaCiudad").innerText = objetoRecuperado.ciudad;
-
-        // Hacerla Visible
-        document.getElementById("tablaDatos").style.display = "table";
+        // .text() de jQuery inserta el string en el párrafo
+        $("#deserializado").text("Recuperado: " + texto);
     }
 </script>
-
 </body>
 </html>

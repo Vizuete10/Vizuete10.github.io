@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="json/jquery4.js"></script>
+    <script src="json/jquery3.js"></script>
+    <style>
+        h1 {
+            color: var(--title-color);
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 0 0 10px 0;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+            font-family: Helvetica, sans-serif;
+        }
+        h2 {
+            color: var(--title-color);
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin: 0 0 10px 0;
+            letter-spacing: -0.5px;
+            font-family: Helvetica, sans-serif;
+        }
+        button {
+            cursor: pointer;
+
+        }
+        input {
+            width: 100%;
+            height: 100%;
+            border: alpha();
+            outline: none;
+            padding: 0;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+<h1>Ejercicio 1: Examen</h1>
+
+<h2>Álvaro Vizuete Valle</h2>
+<!-- Boton para mostrar las instrucciones -->
+<button type="button" onclick="instrucciones()">Mostrar instrucciones</button>
+<br>
+
+<!-- Lista de las instrucciones -->
+<ol id="instrucciones"> </ol>
+<h2 id="mensajeError"></h2>
+
+<!-- Formulario con todos los datos -->
+
+<input type="hidden"   id="nom_alum"  placeholder="Ej: Alvaro">
+<input type="hidden" id="num_alum"  placeholder="Ej: 1">
+
+<label for="nombre">Nombre: </label>
+<input type="text" id="nombre"  placeholder="Ej: Pedro">
+<br><br>
+
+<label for="apellidos">Apellidos: </label>
+<input type="text" id="apellidos"  placeholder="Ej: Poley">
+<br><br>
+
+<label for="password">Password: </label>
+<input type="password" id="password"  placeholder="Ej: odioJQUEY10_">
+
+<input type="hidden" id="llave"  placeholder="Llave">
+<br>
+
+<br>
+
+<button type="button" onclick="enviarFormulario()">Enviar Formulario</button>
+
+<script>
+
+    // Funcion para mostrar las instrucciones, pero no consigo que salga por pantalla
+    function instrucciones(){
+        $.ajax({
+            url:"http://192.168.100.150/api/secret",
+            method: "GET",
+            dataType: "json"  // auto-parsea respuesta
+        }).done(function (response) {
+
+            console.log(response);  // objeto JS listo
+            generaLista(response);
+            if (!response.error) {
+                // Mensaje de éxito en verde dentro del h2
+                $("#mensajeError").css("color", "green")
+                    .text("Se han mostrado las instrucciones por consola");
+            } else {
+                // Mensaje de error
+                $("#mensajeError").css("color", "red").text(response.error);
+            }
+
+        }).fail(err => console.log(err));
+    };
+
+
+    function enviarFormulario() {
+
+        // Objeto con todos los datos
+        const obj = {
+            nom_alum: "Alvaro",
+            num_ejer: 1,
+            nombre: $("#nombre").val(),
+            apellidos: $("#apellidos").val(),
+            password: $("#password").val(),
+            key: "648f23140c7f2f05f8c48e1150f2ef96",// no se me guarda la key la he guardado manual para probar lo demas
+        };
+
+        // Llamamos a la funcion obtener llave para guardar la key
+        obtenerLlave(obj);
+
+        // Validación de si el usuario a introducido los datos
+        if (!$("#nombre").val() || !$("#apellidos").val() || !$("#password").val()) {
+            alert("Todos los campos son obligatorios");
+            return;
+        };
+
+    // Metodo post final, enviando todos los datos, me sale error 500 en la consola
+    $.ajax({
+            url:"http://192.168.100.150/api/secret",
+            method: "POST",
+            data: JSON.stringify(obj),
+            contentType: "application/json",  // qué envío
+            dataType:"json"
+        }).done(r => console.log(r))
+            .fail(e => console.log(e));
+    };
+
+    // No me funciona que se muestre en la pantalla me faltara algo pero ahora mismo no caigo veo el array en la consola,
+    // voy a intentar seguir con el ejercicio, se que esta el .join(),
+    function generaLista(response){
+        return `<li>${response[0]}</li>
+                <li>${response[1]}</li>
+                <li>${response[2]}</li>
+                <li>${response[3]}</li>
+                <li>${response[4]}</li>
+                <li>${response[5]}</li>`
+
+    };
+    // Funcion para obtener la llave, la obtiene pero no se mostrarla en pantalla
+    function obtenerLlave(obj) {
+                $.ajax({
+                    url: "http://192.168.100.150/api/get_key",
+                    method: "POST",
+                    data: JSON.stringify(obj),
+                    contentType: "application/json", // lo que envío
+                    dataType: "json"             // lo que espero
+                }).done(respuesta => {
+                    console.log(respuesta)
+                    mostrarKey(respuesta);
+                    obj.key = respuesta;
+                })
+                    .fail(err => console.log(err));
+            }
+
+            // No se mostrar la key, voy a intentar lo demas
+            function mostrarKey(respuesta){
+                return `<p>${respuesta.token}</p>`;
+    };
+</script>
+</body>
+</html>

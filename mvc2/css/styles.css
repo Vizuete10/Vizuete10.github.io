@@ -1,0 +1,6 @@
+table, th, td { border: 1px solid #333; border-collapse: collapse; padding: 6px; }
+tr:hover { background-color: #ffd0d0; cursor: pointer; }
+input { margin: 4px; }
+h2 { margin-bottom: 20px; }
+button { padding: 5px 15px; cursor: pointer; }
+#estadisticas { margin: 15px 0; font-weight: bold; color: #333; }

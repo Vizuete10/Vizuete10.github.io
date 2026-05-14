@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ejercicio 2 MVC: MEGARETO</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="js/model.js"></script>
+    <script src="js/view.js"></script>
+    <script src="js/controller.js"></script>
+</head>
+<body>
+<h2>EJ2 MVC MEGARETO</h2>
+
+<input type="text"   id="nombre"    placeholder="Nombre">
+<input type="text"   id="apellidos" placeholder="Apellidos">
+<input type="number" id="edad"      placeholder="Edad">
+<input type="text"   id="ciudad"    placeholder="Ciudad">
+<button type="button" onclick="principal()">Insertar</button>
+
+<div id="estadisticas"></div>
+
+<table>
+    <thead>
+    <tr><th>Nombre</th><th>Apellidos</th><th>Edad</th><th>Ciudad</th></tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+</table>
+
+<script>
+    $(document).ready(() => {
+        Controller.init();
+    });
+</script>
+</body>
+</html>
